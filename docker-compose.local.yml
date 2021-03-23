@@ -1,0 +1,17 @@
+version: "3.7"
+
+services:
+  web:
+    image: management-medical-history-web
+    container_name: management-medical-history-web
+    build:
+      context: .
+      dockerfile: ./compose/dev/Dockerfile
+      args:
+        VARIANT: 14
+    env_file:
+      - ./.envs/.local/.env
+    ports: 
+      - 3001:3000
+    environment:
+      - "VIRTUAL_HOST=siellano-dev.com"

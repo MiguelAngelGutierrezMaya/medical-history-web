@@ -1,0 +1,21 @@
+version: "3.7"
+
+services:
+  web:
+    image: management-medical-history-web
+    container_name: management-medical-history-web
+    build:
+      context: .
+      dockerfile: ./compose/prod/Dockerfile
+    ports:
+      - "8000:80"
+    networks:
+      - containers_network
+    environment:
+      - "VIRTUAL_HOST=siellano.pcaingenieria.co"
+    expose:
+      - 80
+
+networks:
+  containers_network:
+    external: true
