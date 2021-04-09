@@ -42,7 +42,7 @@ export const Login = () => {
         Auth.authenticate({ ...response.data })
         const user = Auth.getUser()
         dispatch(authenticate(user))
-        history.push(Router.appHome)
+        history.push(Router.appIndexCardHolder)
       } else {
         setHasError(true)
       }

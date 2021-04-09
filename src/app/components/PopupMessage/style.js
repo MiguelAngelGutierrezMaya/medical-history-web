@@ -20,7 +20,7 @@ export const useStyles = makeStyles((theme) => ({
     height: 130,
     width: '100%',
     borderRadius: '20px 20px 0 0',
-    backgroundColor: Color.blueExtraLight,
+    backgroundColor: Color.purpleLight,
   },
   iconBackground: {
     width: 80,

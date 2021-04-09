@@ -14,7 +14,7 @@ export const CustomTextField = withStyles({
       fontSize: '0.85rem',
     },
     '& label.MuiInputLabel-animated': {
-      fontSize: '0.85rem',
+      fontSize: '0.9rem',
     },
     '& label.Mui-focused': {
       color: 'rgb(59, 59, 59)',
