@@ -8,7 +8,9 @@ export const Router = {
   appResetPassword: '/reset-password',
   appResetPasswordConfirm: '/reset-password-confirm/:token',
   appIndexCardHolder: '/dashboard/index-card-holder',
-  appServicesBriefcase: '/dashboard/services-briefcase',
+  appMedicalHistoriesConfig: '/dashboard/medical-histories-config',
+  appSearchMedicalHistoriesConfig: '/dashboard/search-medical-histories-config',
+  appSchedule: '/dashboard/schedule',
 
   // API URI
   apiUrlBase: process.env.REACT_APP_API_URL,
@@ -32,4 +34,9 @@ export const Router = {
   apiRelationshipPersonInCharge: '/api/relationship-person-in-charge/',
   apiHcOpenPlace: '/api/hc-open-place/',
   apiHcTransferTo: '/api/hc-transfer-to/',
+  apiHcConfig: '/api/medical-history-config/',
+  apiHcConfigDetail: '/api/medical-history-config-detail/:hc_id',
+  apiAvailabilities: '/api/availabilities/',
+  apiAppointments: '/api/schedules/',
+  apiReschedule: '/api/reschedule/',
 }

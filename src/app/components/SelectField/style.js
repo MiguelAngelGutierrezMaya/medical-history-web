@@ -16,6 +16,10 @@ export const useStyles = makeStyles({
       borderBottom: '1px solid rgba(0, 0, 0, 0.42)',
       outline: 'none',
     },
+    '& .MuiInput-underline.Mui-error:after': {
+      borderBottom: `2px solid ${Color.error}`,
+      outline: 'none',
+    },
     '& .MuiInputLabel-shrink': {
       transform: 'translate(0, 1.5px) scale(0.75)',
       fontSize: '1rem',

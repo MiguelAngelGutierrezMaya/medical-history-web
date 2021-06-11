@@ -11,12 +11,16 @@ export const InputField = ({
   onClick,
   helperText,
   inputLabelProps,
+  multiline,
+  rows,
+  rowsMax
 }) => {
   return (
     <CustomTextField
       error={error || false}
       helperText={helperText || ''}
       className={className}
+      multiline={multiline}
       label={label}
       fullWidth={true}
       type={type || 'text'}
@@ -25,6 +29,8 @@ export const InputField = ({
       InputProps={inputProps}
       InputLabelProps={inputLabelProps}
       onClick={onClick}
+      rows={rows}
+      rowsMax={rowsMax}
     />
   )
 }

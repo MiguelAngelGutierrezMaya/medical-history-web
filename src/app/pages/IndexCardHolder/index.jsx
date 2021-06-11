@@ -45,7 +45,13 @@ export const IndexCardHolder = () => {
   const [canEdit, setCanEdit] = useState(true)
   const [isActiveEdit, setIsActiveEdit] = useState(false)
   const [search, setSearch] = useState({ nuip: '', nuipType: '' })
-  const [popupMessage, setPopupMessage] = useState({ open: false, type: '', title: '', description: '', btnLabel: '' })
+  const [popupMessage, setPopupMessage] = useState({
+    open: false,
+    type: '',
+    title: '',
+    description: '',
+    btnLabel: '',
+  })
   const [nacionalities, setNacionalities] = useState([])
   const [countries, setCountries] = useState([])
   const [departments, setDepartments] = useState([])
@@ -60,7 +66,10 @@ export const IndexCardHolder = () => {
   const [scholarshipList, setScholarshipList] = useState([])
   const [ethnicGroupList, setEthnicGroupList] = useState([])
   const [typeDegreeDisabilityList, setTypeDegreeDisabilityList] = useState([])
-  const [relationshipPersonInChargeList, setRelationshipPersonInChargeList] = useState([])
+  const [
+    relationshipPersonInChargeList,
+    setRelationshipPersonInChargeList,
+  ] = useState([])
   const [hcOpenPlaceList, setHcOpenPlaceList] = useState([])
   const [hcTransferToList, setHcTransferToList] = useState([])
   const [form, setForm] = useState({
@@ -120,7 +129,11 @@ export const IndexCardHolder = () => {
   })
 
   // constants
-  const titles = ['DATOS DE IDENTIFICACIÓN DEL USUARIO', 'OTROS DATOS DEL USUARIO', 'DATOS INSTITUCIONALES']
+  const titles = [
+    'DATOS DE IDENTIFICACIÓN DEL USUARIO',
+    'OTROS DATOS DEL USUARIO',
+    'DATOS INSTITUCIONALES',
+  ]
   const contents = [
     <TabOne
       form={form}
@@ -232,19 +245,31 @@ export const IndexCardHolder = () => {
     }
     if (form.nuip === '') {
       hasError = true
-      errors = { ...errors, nuip: { hasError: true, message: 'Campo obligatorio' } }
+      errors = {
+        ...errors,
+        nuip: { hasError: true, message: 'Campo obligatorio' },
+      }
     }
     if (form.surname === '') {
       hasError = true
-      errors = { ...errors, surname: { hasError: true, message: 'Campo obligatorio' } }
+      errors = {
+        ...errors,
+        surname: { hasError: true, message: 'Campo obligatorio' },
+      }
     }
     if (form.secondSurname === '') {
       hasError = true
-      errors = { ...errors, secondSurname: { hasError: true, message: 'Campo obligatorio' } }
+      errors = {
+        ...errors,
+        secondSurname: { hasError: true, message: 'Campo obligatorio' },
+      }
     }
     if (form.firstName === '') {
       hasError = true
-      errors = { ...errors, firstName: { hasError: true, message: 'Campo obligatorio' } }
+      errors = {
+        ...errors,
+        firstName: { hasError: true, message: 'Campo obligatorio' },
+      }
     }
     setError({ ...error, ...errors })
 
@@ -262,14 +287,19 @@ export const IndexCardHolder = () => {
         const profile = ObjFormat.camelCase({
           ...response.data?.profile,
           birthday:
-            response.data?.profile?.birthday !== null ? moment(response.data?.profile?.birthday, 'YYYY-MM-DD') : '',
+            response.data?.profile?.birthday !== null
+              ? moment(response.data?.profile?.birthday, 'YYYY-MM-DD')
+              : '',
           transferDate:
             response.data?.profile?.transfer_date !== null
               ? moment(response.data?.profile?.transfer_date, 'YYYY-MM-DD')
               : '',
           dateLastAttention:
             response.data?.profile?.date_last_attention !== null
-              ? moment(response.data?.profile?.date_last_attention, 'YYYY-MM-DD')
+              ? moment(
+                  response.data?.profile?.date_last_attention,
+                  'YYYY-MM-DD',
+                )
               : '',
         })
         data = { ...user, ...profile }
@@ -283,21 +313,32 @@ export const IndexCardHolder = () => {
           open: true,
           type: 'info',
           title: 'Sin resultados',
-          description: 'No se encontró el paciente con el número de identificacion ingresado',
+          description:
+            'No se encontró el paciente con el número de identificacion ingresado',
           btnLabel: 'Aceptar',
         })
       }
     })
     await Deparment.list(data.country).then((response) => {
       if (response?.status === 200) {
-        setDepartments(response.data.map((item) => ({ key: item.id, text: item.description })))
+        setDepartments(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
       } else if (response?.status === 401) {
         history.push(Router.appLogin)
       }
     })
     await City.list(data.department).then((response) => {
       if (response?.status === 200) {
-        setCities(response.data.map((item) => ({ key: item.id, text: item.description })))
+        setCities(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
       } else if (response?.status === 401) {
         history.push(Router.appLogin)
       }
@@ -309,9 +350,16 @@ export const IndexCardHolder = () => {
       const data = {
         ...form,
         secondName: form.secondName !== '' ? form.secondName : null,
-        birthday: form.birthday !== '' ? form.birthday.format('YYYY-MM-DD') : null,
-        transferDate: form.transferDate !== '' ? form.transferDate.format('YYYY-MM-DD') : null,
-        dateLastAttention: form.dateLastAttention !== '' ? form.dateLastAttention.format('YYYY-MM-DD') : null,
+        birthday:
+          form.birthday !== '' ? form.birthday.format('YYYY-MM-DD') : null,
+        transferDate:
+          form.transferDate !== ''
+            ? form.transferDate.format('YYYY-MM-DD')
+            : null,
+        dateLastAttention:
+          form.dateLastAttention !== ''
+            ? form.dateLastAttention.format('YYYY-MM-DD')
+            : null,
       }
       Patient.saveUpdateProfile(data).then((response) => {
         if (response?.status === 204) {
@@ -326,7 +374,8 @@ export const IndexCardHolder = () => {
             open: true,
             type: 'success',
             title: 'Éxito',
-            description: 'Se ha actualizado la información del tarjetero índice del paciente.',
+            description:
+              'Se ha actualizado la información del tarjetero índice del paciente.',
             btnLabel: 'Aceptar',
           })
           isValidRef.current = true
@@ -599,7 +648,11 @@ export const IndexCardHolder = () => {
         canEdit={canEdit}
         toggleEdit={toggleEdit}
       />
-      {!openForm ? <IndexCardHolderEmpty onClick={showForm} /> : <CustomTabs titles={titles} contents={contents} />}
+      {!openForm ? (
+        <IndexCardHolderEmpty onClick={showForm} />
+      ) : (
+        <CustomTabs titles={titles} contents={contents} />
+      )}
       <PopupMessage
         open={popupMessage.open}
         type={popupMessage.type}

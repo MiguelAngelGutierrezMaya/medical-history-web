@@ -64,7 +64,7 @@ export const Header = () => {
           >
             <SvgIcon className={classes.menuIcon} component={MenuIcon} viewBox="0 0 512 512" />
           </IconButton>
-          <Link to={Router.appServicesBriefcase}>
+          <Link to={Router.appMedicalHistoriesConfig}>
               <img className={classes.logo} src={logo} alt="logo" />
           </Link>
           <div className={classes.grow} />

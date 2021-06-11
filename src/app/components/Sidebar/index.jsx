@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { forwardRef } from 'react'
-import { AssignmentInd, Description } from '@material-ui/icons'
+import { AssignmentInd, Event, FindInPage, Settings } from '@material-ui/icons'
 
 // routes
 import { Router } from '../../../routes'
@@ -28,9 +28,19 @@ import clsx from 'clsx'
 const options = [
   { isHeader: true, text: 'categoría' },
   {
-    icon: <Description />,
-    text: 'Historias Clínicas',
-    route: Router.appServicesBriefcase,
+    icon: <Settings />,
+    text: 'Config. Historias Clínicas',
+    route: Router.appMedicalHistoriesConfig,
+  },
+  {
+    icon: <FindInPage />,
+    text: 'Buscar Config. Historia Clínica',
+    route: Router.appSearchMedicalHistoriesConfig,
+  },
+  {
+    icon: <Event />,
+    text: 'Agenda',
+    route: Router.appSchedule,
   },
   {
     icon: <AssignmentInd />,
@@ -66,9 +76,17 @@ export const Sidebar = () => {
       <div className={classes.toolbar}>
         <IconButton onClick={() => dispatch(closeSidebar())}>
           {theme.direction === 'rtl' ? (
-            <SvgIcon className={classes.sidebarControls} component={ChevronLeftIcon} viewBox="0 0 407.436 407.436" />
+            <SvgIcon
+              className={classes.sidebarControls}
+              component={ChevronLeftIcon}
+              viewBox="0 0 407.436 407.436"
+            />
           ) : (
-            <SvgIcon className={classes.sidebarControls} component={ChevronRightIcon} viewBox="0 0 407.436 407.436" />
+            <SvgIcon
+              className={classes.sidebarControls}
+              component={ChevronRightIcon}
+              viewBox="0 0 407.436 407.436"
+            />
           )}
         </IconButton>
       </div>
@@ -83,8 +101,16 @@ export const Sidebar = () => {
               <Divider className={classes.divider} key={index} />
             )
           ) : (
-            <ListItem className={classes.item} button key={index} component={LinkBehavior} to={item.route}>
-              <ListItemIcon className={classes.iconItem}>{item.icon}</ListItemIcon>
+            <ListItem
+              className={classes.item}
+              button
+              key={index}
+              component={LinkBehavior}
+              to={item.route}
+            >
+              <ListItemIcon className={classes.iconItem}>
+                {item.icon}
+              </ListItemIcon>
               <ListItemText className={classes.textItem} primary={item.text} />
             </ListItem>
           )
