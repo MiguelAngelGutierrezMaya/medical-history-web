@@ -11,6 +11,7 @@ export const Router = {
   appMedicalHistoriesConfig: '/dashboard/medical-histories-config',
   appSearchMedicalHistoriesConfig: '/dashboard/search-medical-histories-config',
   appSchedule: '/dashboard/schedule',
+  appClinicalHistories: '/dashboard/clinical-histories',
 
   // API URI
   apiUrlBase: process.env.REACT_APP_API_URL,

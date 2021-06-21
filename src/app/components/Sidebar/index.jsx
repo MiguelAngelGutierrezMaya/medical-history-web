@@ -28,6 +28,11 @@ import clsx from 'clsx'
 const options = [
   { isHeader: true, text: 'categoría' },
   {
+    icon: <AssignmentInd />,
+    text: 'Historias Clinicas',
+    route: Router.appClinicalHistories,
+  },
+  {
     icon: <Settings />,
     text: 'Config. Historias Clínicas',
     route: Router.appMedicalHistoriesConfig,

@@ -19,6 +19,7 @@ import { MuiPickersUtilsProvider } from '@material-ui/pickers'
 import { ClinicHistory } from './pages/ClinicHistory/index.jsx'
 import { SearchMedicalHistoryConfig } from './pages/SearchMedicalHistoryConfig/index.jsx'
 import { Schedule } from './pages/Schedule/index.jsx'
+import { ClinicalHistory } from './pages/ClinicalHistory/index.jsx'
 
 const App = () => {
   moment.locale('es')
@@ -31,6 +32,7 @@ const App = () => {
           utils={MomentUtils}
           locale="es"
         >
+          {/* Guest views */}
           <LayoutRoute path={Router.appLogin}>
             <Login />
           </LayoutRoute>
@@ -40,29 +42,42 @@ const App = () => {
           <LayoutRoute path={Router.appResetPasswordConfirm}>
             <ResetPasswordConfirm />
           </LayoutRoute>
+
+          {/* Login views */}
           <DashboardRoute
-            // hasAuthorization={true}
+            hasAuthorization={true}
             path={Router.appIndexCardHolder}
           >
             <IndexCardHolder />
           </DashboardRoute>
           <DashboardRoute
-            // hasAuthorization={true}
+            hasAuthorization={true}
             path={Router.appMedicalHistoriesConfig}
           >
             <ClinicHistory />
           </DashboardRoute>
           <DashboardRoute
-            // hasAuthorization={true}
+            hasAuthorization={true}
             path={Router.appSearchMedicalHistoriesConfig}
           >
             <SearchMedicalHistoryConfig />
           </DashboardRoute>
           <DashboardRoute
-            // hasAuthorization={true}
+            hasAuthorization={true}
+            path={Router.appClinicalHistories}
+          >
+            <ClinicalHistory />
+          </DashboardRoute>
+          <DashboardRoute
+            hasAuthorization={true}
             path={Router.appSchedule}
           >
             <Schedule />
+          </DashboardRoute>
+          <DashboardRoute
+            hasAuthorization={true}
+            path={Router.appLogout}
+          >
           </DashboardRoute>
         </MuiPickersUtilsProvider>
       </Switch>
