@@ -7,6 +7,11 @@ export const useStyles = makeStyles((theme) => ({
     color: Color.purpleLight,
     fontWeight: 'bold'
   },
+  subtitle: {
+    textAlign: 'center',
+    color: Color.blueDark,
+    fontWeight: 'bold'
+  },
   fab: {
     width: theme.spacing(5),
     height: theme.spacing(5),
@@ -16,4 +21,7 @@ export const useStyles = makeStyles((theme) => ({
   icon: {
     color: Color.blueExtraLight
   },
+  button: {
+    color: Color.green
+  }
 }))

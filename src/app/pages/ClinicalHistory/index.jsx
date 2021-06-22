@@ -11,11 +11,15 @@ import { PatientMedicalHistories } from '../../components/PatientMedicalHistorie
 import { HeaderBasic } from '../../containers/HeaderBasic'
 import { Grid } from '@material-ui/core'
 
+// containers
+import { CardHCContainer } from '../../containers/CardHCContainer'
+
 // api
 import { Patient } from '../../../api/patient'
 import { Country } from '../../../api/country'
 import { Deparment } from '../../../api/deparment'
 import { City } from '../../../api/city'
+import { MedicalHistory } from '../../../api/medicalHistory'
 
 // routes
 import { Router } from '../../../routes'
@@ -39,6 +43,7 @@ export const ClinicalHistory = () => {
   const [countries, setCountries] = useState([])
   const [departments, setDepartments] = useState([])
   const [cities, setCities] = useState([])
+  const [medicalHistories, setMedicalHistories] = useState([])
   const [typeView, setTypeView] = useState("one")
   const [openView, setOpenView] = useState(false)
   const [search, setSearch] = useState({ nuip: '', nuipType: '' })
@@ -135,6 +140,16 @@ export const ClinicalHistory = () => {
         history.push(Router.appLogin)
       }
     })
+    await MedicalHistory.list().then((response) => {
+      if (response?.status === 200) {
+        setMedicalHistories(
+          response.data?.map((item) => ({
+            key: item.id,
+            text: item.name,
+          })),
+        )
+      }
+    })
   }
 
   return (
@@ -173,7 +188,12 @@ export const ClinicalHistory = () => {
               ></PatientInfo>
             </Grid>
             <Grid className={classes.spacing} item lg={7} md={6} sm={12} xs={12}>
-              <HeaderBasic type={typeView} onClick={() => handleChangeView("two")}></HeaderBasic>
+              <HeaderBasic
+                type={typeView}
+                onClick={() => handleChangeView("two")}
+                onReturn={() => handleChangeView("one")}
+                subtitle={'Seleccionar tipo de Historia Clinica'}
+              ></HeaderBasic>
               {
                 typeView === 'one' ? (
                   <PatientMedicalHistories data={[{
@@ -184,7 +204,11 @@ export const ClinicalHistory = () => {
                     profesional: '--',
                     clinic_history: '--'
                   }]}></PatientMedicalHistories>
-                ) : (<></>)
+                ) : (
+                  <>
+                    <CardHCContainer list={medicalHistories} onClick={() => console.log('funciona')}></CardHCContainer>
+                  </>
+                )
               }
             </Grid>
           </Grid>

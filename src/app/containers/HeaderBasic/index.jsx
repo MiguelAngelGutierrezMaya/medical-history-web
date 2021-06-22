@@ -1,12 +1,13 @@
 // Icons
 import AddIcon from '@material-ui/icons/Add'
+import ArrowBackIosIcon from '@material-ui/icons/ArrowBackIos';
 
-import { Fab } from '@material-ui/core'
+import { Button, Fab } from '@material-ui/core'
 
 // styles & assets
 import { useStyles } from './style'
 
-export const HeaderBasic = ({ type, onClick }) => {
+export const HeaderBasic = ({ subtitle, type, onClick, onReturn }) => {
   const classes = useStyles()
 
   const types = {
@@ -18,6 +19,12 @@ export const HeaderBasic = ({ type, onClick }) => {
         </Fab>
       </div>
     ),
+    'two': (
+      <div>
+        <Button className={classes.button} startIcon={<ArrowBackIosIcon />} onClick={() => onReturn()}>REGRESAR</Button>
+        <h3 className={classes.subtitle}>{subtitle}</h3>
+      </div>
+    )
   }
 
   return types[type] || (<></>)

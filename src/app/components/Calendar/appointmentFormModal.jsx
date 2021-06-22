@@ -38,7 +38,7 @@ export const AppointmentFormModal = ({
   const history = useHistory()
   const classes = useStyles()
   const isInitRef = useRef(true)
-  const attentionMethodRef = useRef('')
+  // const attentionMethodRef = useRef('')
   const dispatch = useDispatch()
   const [services, setServices] = useState([])
   const [attentionMethodAux, setAttentionMethodAux] = useState([])
@@ -69,15 +69,15 @@ export const AppointmentFormModal = ({
     [history, dispatch],
   )
 
-  const getElementByXpath = (path) => {
-    return document.evaluate(
-      path,
-      document,
-      null,
-      XPathResult.FIRST_ORDERED_NODE_TYPE,
-      null,
-    ).singleNodeValue
-  }
+  // const getElementByXpath = (path) => {
+  //   return document.evaluate(
+  //     path,
+  //     document,
+  //     null,
+  //     XPathResult.FIRST_ORDERED_NODE_TYPE,
+  //     null,
+  //   ).singleNodeValue
+  // }
 
   const handleChange = (event) => {
     if (event.target.name === 'service') {
