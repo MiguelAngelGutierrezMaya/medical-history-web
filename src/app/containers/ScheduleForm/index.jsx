@@ -29,7 +29,8 @@ export const ScheduleForm = () => {
   const calendar = useSelector(selectCalendar)
   const classes = useStyles()
   const isInitRef = useRef(true)
-  const [duration, setDuration] = useState(30)
+  const [duration, setDuration] = useState(0)
+  const [selectedDate, setSelectedDate] = useState(new Date())
   const [popupMessage, setPopupMessage] = useState({
     open: false,
     type: '',
@@ -38,7 +39,6 @@ export const ScheduleForm = () => {
     btnLabel: '',
   })
   const [form, setForm] = useState({
-    duration: 30,
     monday: [
       {
         startDate: null,
@@ -111,8 +111,8 @@ export const ScheduleForm = () => {
     ],
   })
 
-  const getData = useCallback(() => {
-    Schedule.availabilities().then((response) => {
+  const getData = useCallback((startDate, endDate) => {
+    Schedule.availabilities(startDate, endDate).then((response) => {
       if (response?.status === 200) {
         let data = {}
         response.data.forEach((item) => {
@@ -129,6 +129,7 @@ export const ScheduleForm = () => {
                   message1: '',
                   hasError2: false,
                   message2: '',
+                  appointment_duration: item.appointment_duration,
                 },
               ],
             }
@@ -157,6 +158,7 @@ export const ScheduleForm = () => {
                     message1: '',
                     hasError2: false,
                     message2: '',
+                    appointment_duration: item.appointment_duration,
                   },
                 ],
               }
@@ -183,13 +185,91 @@ export const ScheduleForm = () => {
                     message1: '',
                     hasError2: false,
                     message2: '',
+                    appointment_duration: item.appointment_duration,
                   },
                 ],
               }
             }
           }
         })
-        if (response.data.length > 0) setForm({ ...data })
+        if (response.data.length > 0) {
+          setDuration(response.data[0]?.appointment_duration)
+          setForm({ ...data })
+        } else {
+          setDuration(30)
+          setForm({
+            monday: [
+              {
+                startDate: null,
+                endDate: null,
+                hasError1: false,
+                message1: '',
+                hasError2: false,
+                message2: '',
+              },
+            ],
+            tuesday: [
+              {
+                startDate: null,
+                endDate: null,
+                hasError1: false,
+                message1: '',
+                hasError2: false,
+                message2: '',
+              },
+            ],
+            wednesday: [
+              {
+                startDate: null,
+                endDate: null,
+                hasError1: false,
+                message1: '',
+                hasError2: false,
+                message2: '',
+              },
+            ],
+            thursday: [
+              {
+                startDate: null,
+                endDate: null,
+                hasError1: false,
+                message1: '',
+                hasError2: false,
+                message2: '',
+              },
+            ],
+            friday: [
+              {
+                startDate: null,
+                endDate: null,
+                hasError1: false,
+                message1: '',
+                hasError2: false,
+                message2: '',
+              },
+            ],
+            saturday: [
+              {
+                startDate: null,
+                endDate: null,
+                hasError1: false,
+                message1: '',
+                hasError2: false,
+                message2: '',
+              },
+            ],
+            sunday: [
+              {
+                startDate: null,
+                endDate: null,
+                hasError1: false,
+                message1: '',
+                hasError2: false,
+                message2: '',
+              },
+            ],
+          })
+        }
       }
     })
   }, [])
@@ -289,19 +369,19 @@ export const ScheduleForm = () => {
     setForm({ ...aux })
   }
 
-  const getAvailabilities = (dayWeek, day) => {
+  const getAvailabilities = (dayWeek, day, date) => {
     const availabilities = []
     form[dayWeek].forEach((item) => {
       if (item.startDate == null) {
         availabilities[availabilities.length] = {
           id: item.id,
-          start_date: moment()
+          start_date: moment(date || new Date())
             .day(day)
             .set('hour', 6)
             .set('minute', 0)
             .set('second', 0)
             .format('YYYY-MM-DD HH:mm:ss'),
-          end_date: moment()
+          end_date: moment(date || new Date())
             .day(day)
             .set('hour', 23)
             .set('minute', 59)
@@ -309,6 +389,7 @@ export const ScheduleForm = () => {
             .format('YYYY-MM-DD HH:mm:ss'),
           can_work: false,
           all_day: true,
+          appointment_duration: duration,
         }
       } else {
         availabilities[availabilities.length] = {
@@ -318,6 +399,7 @@ export const ScheduleForm = () => {
           can_work: true,
           all_day: false,
           action: item.action,
+          appointment_duration: duration,
         }
       }
     })
@@ -379,13 +461,13 @@ export const ScheduleForm = () => {
         btnLabel: 'Aceptar',
       })
     } else {
-      let list = [].concat(getAvailabilities('sunday', 0))
-      list = list.concat(getAvailabilities('monday', 1))
-      list = list.concat(getAvailabilities('tuesday', 2))
-      list = list.concat(getAvailabilities('wednesday', 3))
-      list = list.concat(getAvailabilities('thursday', 4))
-      list = list.concat(getAvailabilities('friday', 5))
-      list = list.concat(getAvailabilities('saturday', 6))
+      let list = [].concat(getAvailabilities('sunday', 0, selectedDate))
+      list = list.concat(getAvailabilities('monday', 1, selectedDate))
+      list = list.concat(getAvailabilities('tuesday', 2, selectedDate))
+      list = list.concat(getAvailabilities('wednesday', 3, selectedDate))
+      list = list.concat(getAvailabilities('thursday', 4, selectedDate))
+      list = list.concat(getAvailabilities('friday', 5, selectedDate))
+      list = list.concat(getAvailabilities('saturday', 6, selectedDate))
 
       Schedule.addAvailabilities(list).then((response) => {
         if (response?.status === 204) {
@@ -396,7 +478,13 @@ export const ScheduleForm = () => {
             description: 'Se actualizó la disponibilidad satisfactoriamente',
             btnLabel: 'Aceptar',
           })
-          getData()
+          const startDate = moment(selectedDate || new Date())
+            .day(0)
+            .format('YYYY-MM-DD')
+          const endDate = moment(selectedDate || new Date())
+            .day(6)
+            .format('YYYY-MM-DD')
+          getData(startDate, endDate)
           getAppointments(
             moment(calendar.currentDate || new Date())
               .day(0)
@@ -542,17 +630,33 @@ export const ScheduleForm = () => {
 
   const handleChangeInput = (event) => {
     if (!isNaN(parseInt(event.target.value))) {
-      // setForm({ ...form, [event.target.name]: parseInt(event.target.value) })
       setDuration(event.target.value)
     }
   }
 
+  const handleChangeInputRangeDate = (newDate) => {
+    const startDate = moment(newDate || new Date())
+      .day(0)
+      .format('YYYY-MM-DD')
+    const endDate = moment(newDate || new Date())
+      .day(6)
+      .format('YYYY-MM-DD')
+    setSelectedDate(newDate)
+    getData(startDate, endDate)
+  }
+
   useEffect(() => {
     if (isInitRef.current) {
-      getData()
+      const startDate = moment(calendar.currentDate || new Date())
+        .day(0)
+        .format('YYYY-MM-DD')
+      const endDate = moment(calendar.currentDate || new Date())
+        .day(6)
+        .format('YYYY-MM-DD')
+      getData(startDate, endDate)
       isInitRef.current = false
     }
-  }, [isInitRef, getData])
+  }, [isInitRef, getData, calendar.currentDate])
 
   return (
     <>
@@ -569,7 +673,10 @@ export const ScheduleForm = () => {
                   md={6}
                   lg={6}
                 >
-                  <InputRangeDatePicker />
+                  <InputRangeDatePicker
+                    value={selectedDate}
+                    onChange={handleChangeInputRangeDate}
+                  />
                 </Grid>
                 <Grid
                   className={classes.rangeDate}
@@ -593,13 +700,13 @@ export const ScheduleForm = () => {
                   />
                 </Grid>
               </Grid>
-              {item('Lunes', moment().day(1), form.monday, 'monday')}
-              {item('Martes', moment().day(2), form.tuesday, 'tuesday')}
-              {item('Miércoles', moment().day(3), form.wednesday, 'wednesday')}
-              {item('Jueves', moment().day(4), form.thursday, 'thursday')}
-              {item('Viernes', moment().day(5), form.friday, 'friday')}
-              {item('Sábado', moment().day(6), form.saturday, 'saturday')}
-              {item('Domingo', moment().day(0), form.sunday, 'sunday')}
+              {item('Lunes', moment(selectedDate || new Date()).day(1), form.monday, 'monday')}
+              {item('Martes', moment(selectedDate || new Date()).day(2), form.tuesday, 'tuesday')}
+              {item('Miércoles', moment(selectedDate || new Date()).day(3), form.wednesday, 'wednesday')}
+              {item('Jueves', moment(selectedDate || new Date()).day(4), form.thursday, 'thursday')}
+              {item('Viernes', moment(selectedDate || new Date()).day(5), form.friday, 'friday')}
+              {item('Sábado', moment(selectedDate || new Date()).day(6), form.saturday, 'saturday')}
+              {item('Domingo', moment(selectedDate || new Date()).day(0), form.sunday, 'sunday')}
             </Grid>
             <Button
               className={classes.btn}

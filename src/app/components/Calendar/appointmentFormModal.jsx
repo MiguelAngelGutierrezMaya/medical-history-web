@@ -11,11 +11,8 @@ import {
 import { useHistory } from 'react-router-dom'
 import moment from 'moment'
 
-import { SelectField } from '../SelectField'
 import { InputTime } from '../InputTime'
 import { InputDate } from '../InputDate'
-
-// import { Service } from '../../../api/service'
 
 import { useStyles } from './style'
 import { Router } from '../../../routes'
@@ -38,20 +35,17 @@ export const AppointmentFormModal = ({
   const history = useHistory()
   const classes = useStyles()
   const isInitRef = useRef(true)
-  const attentionMethodRef = useRef('')
+  // const attentionMethodRef = useRef('')
   const dispatch = useDispatch()
-  const [services, setServices] = useState([])
-  const [attentionMethodAux, setAttentionMethodAux] = useState([])
   const [form, setForm] = useState({
-    service: '',
-    attention_method: '',
-    date: '',
-    duration: '',
-    time: '',
+    title: data.title,
+    date: moment(data.startDate),
+    duration: data.duration,
+    time: moment(data.startDate),
   })
   const [error, setError] = useState({
-    service: { hasError: false, message: '' },
-    attention_method: { hasError: false, message: '' },
+    title: { hasError: false, message: '' },
+    duration: { hasError: false, message: '' },
     date: { hasError: false, message: '' },
     time: { hasError: false, message: '' },
   })
@@ -69,15 +63,15 @@ export const AppointmentFormModal = ({
     [history, dispatch],
   )
 
-  const getElementByXpath = (path) => {
-    return document.evaluate(
-      path,
-      document,
-      null,
-      XPathResult.FIRST_ORDERED_NODE_TYPE,
-      null,
-    ).singleNodeValue
-  }
+  // const getElementByXpath = (path) => {
+  //   return document.evaluate(
+  //     path,
+  //     document,
+  //     null,
+  //     XPathResult.FIRST_ORDERED_NODE_TYPE,
+  //     null,
+  //   ).singleNodeValue
+  // }
 
   const handleChange = (event) => {
     if (event.target.name === 'service') {
@@ -91,63 +85,16 @@ export const AppointmentFormModal = ({
     } else setForm({ ...form, [event.target.name]: event.target.value })
   }
 
-  const getServices = useCallback(() => {
-    // Service.servicesByProfession().then((response) => {
-    //   if (response?.status === 200) {
-    //     setServices(response.data.map((item) => ({ key: item, text: item })))
-    //     attentionMethodRef.current = data.attentionMethod
-    //     setForm({
-    //       service: data.title,
-    //       attention_method: '',
-    //       date: moment(data.startDate),
-    //       time: moment(data.startDate),
-    //       duration: `${data.duration} h`,
-    //     })
-    //   } else if (response?.status === 401) {
-    //     getElementByXpath('/html/body/div[3]/div[3]/div[1]/div/button')?.click()
-    //     history.push(Router.appLogin)
-    //   }
-    // })
-  }, [data, history])
-
-  const getMethods = useCallback((service, list) => {
-    let result = []
-    for (let i = 0; i < list.length; i++) {
-      if (service === list[i].key) {
-        result = list[i].methods
-        break
-      }
-    }
-    setAttentionMethodAux(result)
-  }, [])
-
-  const getAttentionMethods = useCallback(() => {
-    // Service.attentionMethodsService().then((response) => {
-    //   if (response?.status === 200) {
-    //     getMethods(data.title, response.data)
-    //     setForm({
-    //       service: data.title,
-    //       attention_method: attentionMethodRef.current,
-    //       date: moment(data.startDate),
-    //       time: moment(data.startDate),
-    //       duration: `${data.duration} h`,
-    //     })
-    //   } else if (response?.status === 401) {
-    //     history.push(Router.appLogin)
-    //   }
-    // })
-  }, [getMethods, data, history])
-
   const validate = () => {
     let errors = 0
-    if (form.service === '') {
+    if (form.title === '') {
       errors++
       setError({
         ...error,
         service: { hasError: true, message: 'Campo obligatorio' },
       })
     }
-    if (form.attention_method === '') {
+    if (form.duration === '') {
       errors++
       setError({
         ...error,
@@ -171,8 +118,8 @@ export const AppointmentFormModal = ({
     if (errors > 0) return false
 
     setError({
-      service: { hasError: false, message: '' },
-      attention_method: { hasError: false, message: '' },
+      title: { hasError: false, message: '' },
+      duration: { hasError: false, message: '' },
       date: { hasError: false, message: '' },
       time: { hasError: false, message: '' },
     })
@@ -184,8 +131,8 @@ export const AppointmentFormModal = ({
     if (validate()) {
       const json = {
         appointmentId: data.appointmentId,
-        service: form.service,
-        attention_method: form.attention_method,
+        title: form.title,
+        duration: form.duration,
         startDate: form.time.format('YYYY-MM-DD HH:mm'),
       }
       Schedule.reschedule(json).then((response) => {
@@ -217,11 +164,9 @@ export const AppointmentFormModal = ({
 
   useEffect(() => {
     if (isInitRef.current) {
-      getAttentionMethods()
-      getServices()
       isInitRef.current = false
     }
-  }, [isInitRef, getServices, getAttentionMethods])
+  }, [isInitRef])
 
   return (
     <div>
@@ -243,30 +188,33 @@ export const AppointmentFormModal = ({
           <DialogContent style={{ minWidth: 500, padding: '16px 24px' }}>
             <Grid container spacing={4}>
               <Grid item md={6}>
-                <SelectField
-                  label="Nombre del servicio"
+                <InputField
+                  className={classes.margin}
+                  label="Titulo"
                   type="text"
-                  name="service"
-                  value={form.service}
-                  error={error.service.hasError}
-                  helperText={error.service.message}
-                  onChange={handleChange}
-                  options={services}
+                  name="title"
+                  placeholder="Titulo"
+                  inputProps={{
+                    value: form.title,
+                    onChange: handleChange,
+                    disabled: true,
+                  }}
                 />
               </Grid>
               <Grid item md={6}>
-                <SelectField
-                  label="Medio de atención"
+                <InputField
+                  className={classes.margin}
+                  label="Duración"
                   type="text"
-                  name="attention_method"
-                  value={form.attention_method}
-                  error={error.attention_method.hasError}
-                  helperText={error.attention_method.message}
-                  onChange={handleChange}
-                  options={attentionMethodAux || []}
+                  name="duration"
+                  placeholder="Duración"
+                  inputProps={{
+                    value: form.duration,
+                    onChange: handleChange,
+                  }}
                 />
               </Grid>
-              <Grid item md={6}>
+              <Grid item md={6} style={{ padding: '25px 16px' }}>
                 <InputDate
                   error={error.date.hasError}
                   helperText={error.date.message}
@@ -296,20 +244,6 @@ export const AppointmentFormModal = ({
                   views={['hours', 'minutes']}
                   ampm={true}
                   openVale={form.date}
-                />
-              </Grid>
-              <Grid item md={6}>
-                <InputField
-                  className={classes.margin}
-                  label="Duración"
-                  type="text"
-                  name="duration"
-                  placeholder="Duración"
-                  inputProps={{
-                    value: form.duration,
-                    onChange: handleChange,
-                    disabled: true,
-                  }}
                 />
               </Grid>
             </Grid>

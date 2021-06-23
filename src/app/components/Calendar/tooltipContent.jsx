@@ -28,21 +28,23 @@ import { Schedule } from '../../../api/schedules'
 import { Router } from '../../../routes'
 import { PopupMessage } from '../PopupMessage'
 
-const getIcon = (classes, attentionMethod) => {
-  if (attentionMethod === 1){}
-    // return (
-    //   <img className={classes.img} src={PresencialIcon} alt="presencial icon" />
-    // )
-  else if (attentionMethod === 2){}
-    // return (
-    //   <img
-    //     className={classes.img}
-    //     src={DomiciliarioIcon}
-    //     alt="domiciliario icon"
-    //   />
-    // )
-  // return <img className={classes.img} src={VirtualIcon} alt="virtual icon" />
-}
+// const getIcon = (classes, attentionMethod) => {
+//   if (attentionMethod === 1) {
+//   }
+//   // return (
+//   //   <img className={classes.img} src={PresencialIcon} alt="presencial icon" />
+//   // )
+//   else if (attentionMethod === 2) {
+//   }
+//   // return (
+//   //   <img
+//   //     className={classes.img}
+//   //     src={DomiciliarioIcon}
+//   //     alt="domiciliario icon"
+//   //   />
+//   // )
+//   // return <img className={classes.img} src={VirtualIcon} alt="virtual icon" />
+// }
 
 const getButton1 = ({ classes, hasLoading, loading, text, onClick }) => {
   if (hasLoading)
@@ -210,11 +212,11 @@ const appointmentInfo = ({
         alignItems="flex-start"
         className={classes.titleContainer}
       >
-        <Grid item xs={2} className={classNames(classes.textCenter)}>
+        {/* <Grid item xs={2} className={classNames(classes.textCenter)}>
           {getIcon(classes, appointmentData.attentionMethod)}
-        </Grid>
-        <Grid item xs={10}>
-          <div>
+        </Grid> */}
+        <Grid item xs={12}>
+          <div style={{ padding: '0 24px' }}>
             <div className={classNames(classes.title, classes.dateAndTitle)}>
               {appointmentData.title}
             </div>

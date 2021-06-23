@@ -10,7 +10,7 @@ import format from 'date-fns/format'
 import isValid from 'date-fns/isValid'
 import isSameDay from 'date-fns/isSameDay'
 import endOfWeek from 'date-fns/endOfWeek'
-import React, { PureComponent } from 'react'
+import React, { useState } from 'react'
 import startOfWeek from 'date-fns/startOfWeek'
 import isWithinInterval from 'date-fns/isWithinInterval'
 import { DatePicker } from '@material-ui/pickers'
@@ -20,28 +20,31 @@ import { makeJSDateObject } from './makeJSDateObject'
 // styles & assets
 import { customTheme, useStyles } from './style'
 
-class InputRangeDatePicker extends PureComponent {
-  state = {
-    selectedDate: new Date(),
+const InputRangeDatePicker = (props) => {
+  const { value, onChange } = props
+
+  const [state, setState] = useState({
+    selectedDate: value || new Date(),
+  })
+
+  const handleWeekChange = (date) => {
+    setState({ selectedDate: startOfWeek(makeJSDateObject(date)) })
+    onChange(makeJSDateObject(date))
   }
 
-  handleWeekChange = (date) => {
-    this.setState({ selectedDate: startOfWeek(makeJSDateObject(date)) })
-  }
-
-  formatWeekSelectLabel = (date, invalidLabel) => {
+  const formatWeekSelectLabel = (date, invalidLabel) => {
     let dateClone = makeJSDateObject(date)
 
     return dateClone && isValid(dateClone)
       ? `${format(startOfWeek(dateClone), 'dd')} - ${format(
           endOfWeek(dateClone),
-          "dd LLLL yyyy",
+          'dd LLLL yyyy',
         )}`
       : invalidLabel
   }
 
-  renderWrappedWeekDay = (date, selectedDate, dayInCurrentMonth) => {
-    const { classes } = this.props
+  const renderWrappedWeekDay = (date, selectedDate, dayInCurrentMonth) => {
+    const { classes } = props
     let dateClone = makeJSDateObject(date)
     let selectedDateClone = makeJSDateObject(selectedDate)
 
@@ -72,23 +75,21 @@ class InputRangeDatePicker extends PureComponent {
     )
   }
 
-  render() {
-    const { selectedDate } = this.state
+  const { selectedDate } = state
 
-    return (
-      <ThemeProvider theme={customTheme}>
-        <CssBaseline />
-        <DatePicker
-          label="Fechas"
-          fullWidth
-          value={selectedDate}
-          onChange={this.handleWeekChange}
-          renderDay={this.renderWrappedWeekDay}
-          labelFunc={this.formatWeekSelectLabel}
-        />
-      </ThemeProvider>
-    )
-  }
+  return (
+    <ThemeProvider theme={customTheme}>
+      <CssBaseline />
+      <DatePicker
+        label="Fechas"
+        fullWidth
+        value={selectedDate}
+        onChange={handleWeekChange}
+        renderDay={renderWrappedWeekDay}
+        labelFunc={formatWeekSelectLabel}
+      />
+    </ThemeProvider>
+  )
 }
 
 export default withStyles(useStyles)(InputRangeDatePicker)
