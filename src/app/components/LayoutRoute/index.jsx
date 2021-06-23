@@ -11,10 +11,7 @@ export const LayoutRoute = ({ children, hasAuthorization, ...rest }) => {
     <Route
       {...rest}
       render={({ location }) => {
-        if (hasAuthorization) {
-          if (user !== null) return <Layout>{children}</Layout>
-          return <Redirect to={{ pathname: Router.appLogin, state: { from: location } }} />
-        }
+        if (user !== null) return <Redirect to={{ pathname: Router.appHome, state: { from: location } }} />
         return <Layout>{children}</Layout>
       }}
     />

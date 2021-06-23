@@ -11,6 +11,7 @@ export const Router = {
   appMedicalHistoriesConfig: '/dashboard/medical-histories-config',
   appSearchMedicalHistoriesConfig: '/dashboard/search-medical-histories-config',
   appSchedule: '/dashboard/schedule',
+  appClinicalHistories: '/dashboard/clinical-histories',
 
   // API URI
   apiUrlBase: process.env.REACT_APP_API_URL,
@@ -35,6 +36,7 @@ export const Router = {
   apiHcOpenPlace: '/api/hc-open-place/',
   apiHcTransferTo: '/api/hc-transfer-to/',
   apiHcConfig: '/api/medical-history-config/',
+  apiUserHc: '/api/user-medical-history/',
   apiHcConfigDetail: '/api/medical-history-config-detail/:hc_id',
   apiAvailabilities: '/api/availabilities/',
   apiAppointments: '/api/schedules/',

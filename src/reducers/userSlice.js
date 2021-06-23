@@ -12,6 +12,8 @@ export const userSlice = createSlice({
     },
     logout: (state) => {
       state.value = null
+      Auth.logout()
+      window.location = '/login'
     },
   },
 })

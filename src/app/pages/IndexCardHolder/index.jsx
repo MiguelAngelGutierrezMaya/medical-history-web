@@ -649,7 +649,12 @@ export const IndexCardHolder = () => {
         toggleEdit={toggleEdit}
       />
       {!openForm ? (
-        <IndexCardHolderEmpty onClick={showForm} />
+        <IndexCardHolderEmpty 
+          onClick={showForm}
+          title={'Digitar documento de identidad del paciente'}
+          text={'para visualizar su tarjetero índice'}
+          showButton={true}
+        />
       ) : (
         <CustomTabs titles={titles} contents={contents} />
       )}
