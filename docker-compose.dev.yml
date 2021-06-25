@@ -8,7 +8,7 @@ services:
       context: .
       dockerfile: ./compose/prod/Dockerfile
     ports:
-      - "8000:80"
+      - "8001:80"
     networks:
       - proxy-containers
     environment:
