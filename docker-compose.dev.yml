@@ -13,6 +13,7 @@ services:
       - proxy-containers
     environment:
       - "VIRTUAL_HOST=siellano.pcaingenieria.co"
+      - "LETSENCRYPT_HOST=siellano.pcaingenieria.co"
     expose:
       - 80
 
