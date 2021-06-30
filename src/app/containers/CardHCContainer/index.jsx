@@ -14,8 +14,8 @@ export const CardHCContainer = ({ list, onClick }) => {
       alignItems="flex-start"
     >
       {
-        list.map(el => (
-          <CardHC data={el} onClick={() => onClick()}></CardHC>
+        list.map((el, i) => (
+          <CardHC key={i} data={el} onClick={() => onClick(el)}></CardHC>
         ))
       }
     </Grid>

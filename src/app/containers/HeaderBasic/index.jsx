@@ -24,6 +24,11 @@ export const HeaderBasic = ({ subtitle, type, onClick, onReturn }) => {
         <Button className={classes.button} startIcon={<ArrowBackIosIcon />} onClick={() => onReturn()}>REGRESAR</Button>
         <h3 className={classes.subtitle}>{subtitle}</h3>
       </div>
+    ),
+    'three': (
+      <div>
+        <Button className={classes.button} startIcon={<ArrowBackIosIcon />} onClick={() => onReturn()}>REGRESAR</Button>
+      </div>
     )
   }
 

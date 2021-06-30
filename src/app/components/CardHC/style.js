@@ -26,6 +26,10 @@ export const useStyles = makeStyles((theme) => ({
     fontWeight: 'bold',
     textAlign: 'center'
   },
+  content: {
+    height: '200px',
+    maxHeight: '200px'
+  },
   button: {
     margin: 'auto',
     marginBottom: '10px',

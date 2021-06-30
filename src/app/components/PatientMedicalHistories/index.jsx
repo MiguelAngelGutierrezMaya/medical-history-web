@@ -23,7 +23,7 @@ export const PatientMedicalHistories = ({ data }) => {
           {data.map((row) => (
             <TableRow key={row.id}>
               <TableCell align="center">{row.date}</TableCell>
-              <TableCell align="center">{row.code}</TableCell>
+              <TableCell align="center">{row.id}</TableCell>
               <TableCell align="center">{row.title}</TableCell>
               <TableCell align="center">{row.profesional}</TableCell>
               <TableCell align="center">{row.clinic_history}</TableCell>

@@ -10,12 +10,12 @@ export const CardHC = ({ data, onClick }) => {
   return (
     <Grid className={classes.spacing} item lg={4} md={6} sm={12} xs={12}>
       <Card className={classes.root}>
-        <CardContent>
+        <CardContent className={classes.content}>
           <Typography className={classes.title} color="textSecondary" gutterBottom>
             HISTORIA CLINICA
           </Typography>
           <Typography className={classes.body}>
-            {data.text}
+            {data.text}    
           </Typography>
         </CardContent>
         <CardActions>

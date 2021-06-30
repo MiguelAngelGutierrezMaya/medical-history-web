@@ -17,4 +17,22 @@ export const UserMedicalHistory = {
         return error.response
       })
   },
+  save: async (data) => {
+    return await axios.post(Router.apiUrlBase + Router.apiUserHc, data).then((response) => {
+      return response
+    })
+      .catch((error) => {
+        return error.response
+      })
+  },
+  getUserMedicalHistory: async (id) => {
+    return await axios
+      .get(Router.apiUrlBase + Router.apiUserHcDetail.replace(':umh_id', id))
+      .then((response) => {
+        return response
+      })
+      .catch((error) => {
+        return error.response
+      })
+  },
 }
