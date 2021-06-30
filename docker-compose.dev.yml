@@ -8,11 +8,12 @@ services:
       context: .
       dockerfile: ./compose/prod/Dockerfile
     ports:
-      - "8000:80"
+      - "8001:80"
     networks:
       - proxy-containers
     environment:
       - "VIRTUAL_HOST=siellano.pcaingenieria.co"
+      - "LETSENCRYPT_HOST=siellano.pcaingenieria.co"
     expose:
       - 80
 

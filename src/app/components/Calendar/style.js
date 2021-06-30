@@ -65,7 +65,7 @@ export const useTooltipContentStyles = makeStyles((theme) => ({
     verticalAlign: 'middle',
     fontSize: '1.3rem',
     marginBottom: 8,
-    color: Color.grayDark,
+    color: Color.blueDark,
   },
   contentItemIcon: {
     textAlign: 'center',
@@ -99,7 +99,7 @@ export const useTooltipContentStyles = makeStyles((theme) => ({
     color: Color.text,
     display: 'inline-block',
     fontWeight: 500,
-    padding: 5,
+    padding: '5px 5px 5px 0',
     textAlign: 'center',
     textTransform: 'initial',
   },
@@ -112,13 +112,13 @@ export const useTooltipContentStyles = makeStyles((theme) => ({
   },
   btnReschedule: {
     width: '10rem',
-    backgroundColor: Color.grayDark,
+    backgroundColor: Color.blueDark,
     color: Color.white,
     textTransform: 'uppercase',
     fontSize: '0.75rem',
     borderRadius: 30,
     '&:hover': {
-      backgroundColor: Color.grayDark,
+      backgroundColor: Color.blueDark,
     },
   },
   btnCancelAppointment: {
@@ -147,7 +147,7 @@ export const useTooltipContentStyles = makeStyles((theme) => ({
     fontSize: '5rem',
     display: 'block',
     width: '100%',
-    color: Color.grayDark,
+    color: Color.blueDark,
   },
   wrapper: {
     display: 'flex',
@@ -214,10 +214,10 @@ export const styles = (theme) => ({
   },
   menuItem: {
     '&:hover': {
-      backgroundColor: Color.greenExtraLight,
+      backgroundColor: Color.purpleLight,
     },
     '&[aria-selected], &[aria-selected]:hover': {
-      backgroundColor: Color.greenExtraLight,
+      backgroundColor: Color.purpleLight,
     },
   },
 })
@@ -226,24 +226,8 @@ export const useStyles = makeStyles((theme) => ({
   appointmentCanceled: {
     backgroundColor: `${Color.appointmentCanceled} !important`,
   },
-  appointmentPresential: {
-    backgroundColor: Color.presential,
-    color: Color.white,
-    padding: '2px 5px',
-    fontSize: '0.6rem',
-    width: '100%',
-    height: '100%',
-  },
-  appointmentDomiciliary: {
-    backgroundColor: Color.domiciliary,
-    color: Color.white,
-    padding: '2px 5px',
-    fontSize: '0.6rem',
-    width: '100%',
-    height: '100%',
-  },
-  appointmentVirtual: {
-    backgroundColor: Color.virtual,
+  appointment: {
+    backgroundColor: Color.purpleLight,
     color: Color.white,
     padding: '2px 5px',
     fontSize: '0.6rem',
@@ -275,7 +259,7 @@ export const useStyles = makeStyles((theme) => ({
   titleForm: {
     color: Color.white,
     fontWeight: 800,
-    backgroundColor: Color.grayDark,
+    backgroundColor: Color.blueDark,
     textTransform: 'uppercase',
   },
 }))

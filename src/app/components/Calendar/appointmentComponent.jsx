@@ -1,7 +1,3 @@
-// import { SvgIcon } from '@material-ui/core'
-// import { ReactComponent as HospitalIcon } from '../../../assets/images/hospital.svg'
-// import { ReactComponent as HomeIcon } from '../../../assets/images/home.svg'
-// import { ReactComponent as LaptopIcon } from '../../../assets/images/laptop.svg'
 import classNames from 'clsx'
 import { useStyles } from './style'
 import { Block } from '@material-ui/icons'
@@ -87,12 +83,14 @@ const getSubtitle = (data) => {
 export const AppointmentComponent = (model) => {
   const classes = useStyles()
   const { data } = model
+
   return (
     <div
       className={classNames({
-        [classes.appointmentPresential]: data.attentionMethod === 1,
-        [classes.appointmentDomiciliary]: data.attentionMethod === 2,
-        [classes.appointmentVirtual]: data.attentionMethod === 3,
+        // [classes.appointmentPresential]: data.attentionMethod === 1,
+        // [classes.appointmentDomiciliary]: data.attentionMethod === 2,
+        // [classes.appointmentVirtual]: data.attentionMethod === 3,
+        [classes.appointment]: data.attentionMethod === undefined,
         [classes.appointmentNotAvailable]: data.attentionMethod === 4,
         [classes.appointmentCanceled]: data.status === 'CANCELED',
       })}
