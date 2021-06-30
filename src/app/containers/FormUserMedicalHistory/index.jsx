@@ -117,7 +117,7 @@ export const FormUserMedicalHistory = (
           <Typography className={classes.label} style={{ marginRight: 30 }}>
             {component.label}
           </Typography>
-          <FormControlLabel control={<CustomSwitch disabled={!canEdit} label="Label" checked={typeof value === 'string' ? value.toLowerCase() === "true" : false || false} onChange={(event) => changeValueItem(el, event.target.checked, false)} />} />
+          <FormControlLabel control={<CustomSwitch disabled={!canEdit} label="Label" checked={typeof value === 'string' ? value.toLowerCase() === "true" : value || false} onChange={(event) => changeValueItem(el, event.target.checked, false)} />} />
         </Grid>
       )
     }
