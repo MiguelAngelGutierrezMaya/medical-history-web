@@ -81,6 +81,9 @@ export const useStyles = makeStyles((theme) => ({
   },
   icon: {
     color: Color.blueExtraLight
+  },
+  button: {
+    color: Color.green
   }
 }))
 

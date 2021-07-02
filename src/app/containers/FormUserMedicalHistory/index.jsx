@@ -3,10 +3,11 @@ import { CustomTabs } from '../../components/CustomTabs'
 import { InputField } from '../../components/InputField'
 import { SelectField } from '../../components/SelectField'
 
-import { Fab, FormControlLabel, Grid, RadioGroup, Typography } from '@material-ui/core'
+import { Button, Fab, FormControlLabel, Grid, RadioGroup, Typography } from '@material-ui/core'
 
 //Icons
 import DeleteIcon from '@material-ui/icons/Delete'
+import AddIcon from '@material-ui/icons/Add'
 
 //Containers
 import { HeaderUserMedicalHistory } from '../../containers/HeaderUserMedicalHistory'
@@ -28,18 +29,19 @@ export const FormUserMedicalHistory = (
     content,
     titles,
     itemsValue,
-    diagnoses,
     canEdit,
     diagnosesList,
-    categories,
     categoriesList,
+    diagnoseSelected,
+    categorySelected,
+    diagnosesCategories,
     handleChangeDate,
     handleChangeHour,
     handleChangeDiagnoses,
     handleChangeCategories,
     onClickBtnSave,
-    deleteDiagnose,
-    deleteCategory,
+    addDiagnoseCategory,
+    deleteDiagnoseCategory,
     changeValueItem
   }) => {
   const classes = useStyles()
@@ -156,8 +158,8 @@ export const FormUserMedicalHistory = (
           item
           xs={12}
           sm={12}
-          md={6}
-          lg={6}
+          md={4}
+          lg={5}
           className={classes.containers}
         >
           <SelectField
@@ -166,38 +168,22 @@ export const FormUserMedicalHistory = (
             label="DIAGNOSTICOS"
             type="text"
             name="diagnoses"
-            value={''}
+            value={diagnoseSelected.text ? diagnoseSelected.text : ''}
             disabled={!canEdit}
             classNameIcon={classes.customSelectIcon}
             onChange={handleChangeDiagnoses}
             options={diagnosesList}
           />
-          <Grid container className={classes.items}>
-            {
-              diagnoses.map((el, i) => (
-                <Grid key={`diagnose-${i}`} item xs={12}
-                  sm={12}
-                  md={6}
-                  lg={6}>
-                  <span>{el.text}</span>
-                  {
-                    canEdit ? (
-                      <Fab aria-label="delete" className={classes.fab} onClick={() => deleteDiagnose(el.key)}>
-                        <DeleteIcon className={classes.icon} />
-                      </Fab>
-                    ) : (<></>)
-                  }
-                </Grid>
-              ))
-            }
-          </Grid>
+          {
+            diagnoseSelected.text
+          }
         </Grid>
         <Grid
           item
           xs={12}
           sm={12}
-          md={6}
-          lg={6}
+          md={4}
+          lg={5}
           className={classes.containers}
         >
           <SelectField
@@ -206,32 +192,73 @@ export const FormUserMedicalHistory = (
             label="CATEGORIAS"
             type="text"
             name="categories"
-            value={''}
+            value={categorySelected.text ? categorySelected.text : ''}
             classNameIcon={classes.customSelectIcon}
             disabled={!canEdit}
             onChange={handleChangeCategories}
             options={categoriesList}
           />
-          <Grid container className={classes.items}>
-            {
-              categories.map((el, i) => (
-                <Grid key={`category-${i}`} item xs={12}
-                  sm={12}
-                  md={6}
-                  lg={6}>
-                  <span>{el.text}</span>
-                  {
-                    canEdit ? (
-                      <Fab aria-label="delete" className={classes.fab} onClick={() => deleteCategory(el.key)}>
-                        <DeleteIcon className={classes.icon} />
-                      </Fab>
-                    ) : (<></>)
-                  }
-                </Grid>
-              ))
-            }
-          </Grid>
+          {
+            categorySelected.text
+          }
         </Grid>
+        <Grid
+          item
+          xs={12}
+          sm={12}
+          md={4}
+          lg={2}
+          className={classes.containers}
+        >
+          <Button className={classes.button} startIcon={<AddIcon />} onClick={() => addDiagnoseCategory()}>Agregar</Button>
+        </Grid>
+        <Grid item xs={5}
+          sm={5}
+          md={5}
+          lg={5}>
+          <h4>Diagnóstico</h4>
+        </Grid>
+        <Grid item xs={5}
+          sm={5}
+          md={5}
+          lg={5}>
+          <h4>Categoría</h4>
+        </Grid>
+        <Grid item xs={5}
+          sm={2}
+          md={2}
+          lg={2}>
+        </Grid>
+        {
+          diagnosesCategories.map((el, i) => (
+            <Grid key={`container-diagnose-category-${i}`} style={{ marginTop: '5px' }} container>
+              <Grid key={`diagnose-${i}`} item xs={5}
+                sm={5}
+                md={5}
+                lg={5}>
+                <span>{el.diagnose.text}</span>
+              </Grid>
+              <Grid key={`category-${i}`} item xs={5}
+                sm={5}
+                md={5}
+                lg={5}>
+                <span>{el.category.text}</span>
+              </Grid>
+              <Grid key={`diagnose-category-div-${i}`} item xs={2}
+                sm={2}
+                md={2}
+                lg={2}>
+                {
+                  canEdit ? (
+                    <Fab key={`diagnose-category-button-${i}`} aria-label="delete" className={classes.fab} onClick={() => deleteDiagnoseCategory(el)}>
+                      <DeleteIcon className={classes.icon} />
+                    </Fab>
+                  ) : (<></>)
+                }
+              </Grid>
+            </Grid>
+          ))
+        }
       </Grid>
     )
   }

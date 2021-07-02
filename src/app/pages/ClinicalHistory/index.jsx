@@ -81,8 +81,9 @@ export const ClinicalHistory = () => {
   const [diagnosesList, setDiagnosesList] = useState([])
   const [categoriesList, setCategoriesList] = useState([])
   const [hcData, setHcData] = useState({})
-  const [diagnoses, setDiagnoses] = useState([])
-  const [categories, setCategories] = useState([])
+  const [diagnosesCategories, setDiagnosesCategories] = useState([])
+  const [diagnoseSelected, setDiagnoseSelected] = useState({})
+  const [categorySelected, setCategorySelected] = useState({})
   const [date, setDate] = useState(null)
   const [hour, setHour] = useState(null)
   const [itemsValue, setItemsValue] = useState([])
@@ -90,33 +91,33 @@ export const ClinicalHistory = () => {
   //
   // Handlers
   //
-  const proccessList = (key, currentList, selectList) => {
-    const object = selectList.find(el => el.key === key)
-    const newList = [...currentList]
-    if (currentList.findIndex(el => el.key === key) === -1) newList.push({ ...object })
-    return newList
+
+  const selectDiagnose = (key) => setDiagnoseSelected({ ...diagnosesList.find(el => el.key === key) })
+  const selectCategory = (key) => setCategorySelected({ ...categoriesList.find(el => el.key === key) })
+
+  const initSelects = () => {
+    setDiagnoseSelected({})
+    setCategorySelected({})
   }
 
-  const proccessDelete = (key, list) => {
-    const index = list.findIndex(el => el.key === key)
-    list.splice(index, 1)
-    return list
+  const addDiagnoseCategory = () => {
+    if (diagnoseSelected.key && categorySelected.key) {
+      const index = diagnosesCategories.findIndex(el => el.diagnose.key === diagnoseSelected.key && el.category.key === categorySelected.key)
+      if (index === -1) {
+        const array = [...diagnosesCategories]
+        array.push({ diagnose: { ...diagnoseSelected }, category: { ...categorySelected } })
+        setDiagnosesCategories([...array])
+      }
+      return initSelects()
+    }
   }
 
-  const selectDiagnose = (key) => {
-    setDiagnoses([...proccessList(key, diagnoses, diagnosesList)])
-  }
-
-  const deleteDiagnose = (key) => {
-    setDiagnoses([...proccessDelete(key, diagnoses)])
-  }
-
-  const deleteCategory = (key) => {
-    setCategories([...proccessDelete(key, categories)])
-  }
-
-  const selectCategory = (key) => {
-    setCategories([...proccessList(key, categories, categoriesList)])
+  const deleteDiagnoseCategory = (data) => {
+    const index = diagnosesCategories.findIndex(el => el.diagnose.key === data.diagnose.key && el.category.key === data.category.key)
+    const array = [...diagnosesCategories]
+    array.splice(index, 1)
+    setDiagnosesCategories([...array])
+    return initSelects()
   }
 
   const handleChangeValueItem = (el, value, focus) => {
@@ -268,8 +269,9 @@ export const ClinicalHistory = () => {
 
   const initData = () => {
     setItemsValue([])
-    setDiagnoses([])
-    setCategories([])
+    setDiagnosesCategories([])
+    setDiagnoseSelected({})
+    setCategorySelected({})
     setDate(null)
     setHour(null)
   }
@@ -295,8 +297,7 @@ export const ClinicalHistory = () => {
       date: `${date.format('YYYY-MM-DD')}T${hour.format('HH:mm:ss')}`,
       medical_history_id: hcData.key,
       itemsValue,
-      diagnoses,
-      categories,
+      diagnosesCategories,
       user_id: userObj.id,
       professional_id: user.id
     })
@@ -315,8 +316,7 @@ export const ClinicalHistory = () => {
     setDate(moment(item.date))
     setHour(moment(item.date))
     setItemsValue([...umh.data.filter(el => el.type === 'itemValue').map(el => ({ ...el, focus: false }))])
-    setCategories([...umh.data.filter(el => el.type === 'categories').map(el => ({ ...JSON.parse(el.value.split("'").join('"')) }))])
-    setDiagnoses([...umh.data.filter(el => el.type === 'diagnoses').map(el => ({ ...JSON.parse(el.value.split("'").join('"')) }))])
+    setDiagnosesCategories([...umh.data.filter(el => el.type === 'diagnosesCategories').map(el => ({ ...JSON.parse(el.value.split("'").join('"')) }))])
   }
 
   return (
@@ -375,10 +375,11 @@ export const ClinicalHistory = () => {
                     hour={hour}
                     content={content}
                     titles={titles}
-                    diagnoses={diagnoses}
                     diagnosesList={diagnosesList}
-                    categories={categories}
                     categoriesList={categoriesList}
+                    diagnosesCategories={diagnosesCategories}
+                    diagnoseSelected={diagnoseSelected}
+                    categorySelected={categorySelected}
                     itemsValue={itemsValue}
                     canEdit={canEdit}
                     changeValueItem={handleChangeValueItem}
@@ -386,8 +387,8 @@ export const ClinicalHistory = () => {
                     handleChangeCategories={(event) => selectCategory(event.target.value)}
                     handleChangeDate={(event) => setDate(event.target.value)}
                     handleChangeHour={(event) => setHour(event.target.value)}
-                    deleteDiagnose={(key) => deleteDiagnose(key)}
-                    deleteCategory={(key) => deleteCategory(key)}
+                    addDiagnoseCategory={() => addDiagnoseCategory()}
+                    deleteDiagnoseCategory={(key) => deleteDiagnoseCategory(key)}
                     onClickBtnSave={handleSaveData}
                   ></FormUserMedicalHistory>
                 </>
