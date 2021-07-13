@@ -20,7 +20,36 @@ export const customTheme = createMuiTheme({
 })
 
 export const useStyles = makeStyles({
-  root: {
-    marginTop: 10,
+  customInput: {
+    '& .MuiInput-underline:before': {
+      borderBottom: `2px solid ${Color.dark}`,
+    },
+    '& .MuiInput-underline:hover:not(.Mui-disabled):before': {
+      borderBottom: `2px solid ${Color.dark}`,
+      outline: 'none',
+    },
+    '& .MuiFormLabel-root': {
+      color: `${Color.dark} !important`,
+    },
+    '& label.Mui-focused': {
+      color: `${Color.dark} !important`,
+    },
+    '& .MuiInput-underline:after': {
+      borderBottomColor: Color.dark,
+    },
+    '& .MuiInput-underline:hover': {
+      borderBottomColor: Color.dark,
+    },
+    '& .MuiInput-underline input': {
+      color: Color.blueDark,
+      fontWeight: 500,
+    },
+    '& .MuiInput-underline.Mui-error:after': {
+      borderBottomColor: 'red',
+    },
+    '& input:invalid + fieldset': {
+      borderColor: 'red',
+      borderWidth: 2,
+    },
   },
 })

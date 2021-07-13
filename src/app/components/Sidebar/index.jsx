@@ -13,7 +13,7 @@ import {
 import { useDispatch, useSelector } from 'react-redux'
 import { NavLink } from 'react-router-dom'
 import { forwardRef } from 'react'
-import { AssignmentInd, Event, FindInPage, Settings } from '@material-ui/icons'
+import { AssignmentInd, Event, FindInPage, Settings, Description } from '@material-ui/icons'
 
 // routes
 import { Router } from '../../../routes'
@@ -27,6 +27,11 @@ import clsx from 'clsx'
 
 const options = [
   { isHeader: true, text: 'categoría' },
+  {
+    icon: <Description />,
+    text: 'Asignar cita',
+    route: Router.appAssignAppointment,
+  },
   {
     icon: <AssignmentInd />,
     text: 'Historias Clinicas',

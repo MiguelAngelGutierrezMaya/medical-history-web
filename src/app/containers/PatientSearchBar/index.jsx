@@ -1,5 +1,5 @@
 import { Button, Grid } from '@material-ui/core'
-import { Edit, Save } from '@material-ui/icons'
+import { Edit, Save, DeleteForever, AssignmentTurnedIn } from '@material-ui/icons'
 import classNames from 'clsx'
 
 // components
@@ -16,8 +16,11 @@ export const PatientSearchBar = ({
   setSearch,
   onSearch,
   toggleEdit,
+  toggleCancel,
   isActiveEdit,
+  isActiveAssign,
   canEdit,
+  canCancel,
 }) => {
   const classes = useStyles()
   // const [hasError, setHasError] = useState(false)
@@ -41,8 +44,6 @@ export const PatientSearchBar = ({
             type="text"
             name="nuipType"
             value={search.nuipType}
-            // error={error.profession.hasError}
-            // helperText={error.profession.message}
             onChange={handleChange}
             options={getNuipType}
           />
@@ -79,11 +80,34 @@ export const PatientSearchBar = ({
                       <div>Editar</div>
                     </Grid>
                   </Button>
+                ) : canCancel ? (
+                  <Button
+                    className={classNames(classes.btnEdit)}
+                    variant="contained"
+                    disableElevation
+                    onClick={toggleCancel}
+                  >
+                    <Grid container direction="column" justify="center" alignItems="center">
+                      <DeleteForever className={classes.saveIcon} />
+                      <div>Cancelar</div>
+                    </Grid>
+                  </Button>
                 ) : null}
                 <Button className={classes.btnSave} variant="contained" disableElevation onClick={onClickBtnSave}>
                   <Grid container direction="column" justify="center" alignItems="center">
-                    <Save className={classes.saveIcon} />
-                    <div>GUARDAR</div>
+                    {
+                      isActiveAssign ? (
+                        <>
+                          <AssignmentTurnedIn className={classes.saveIcon} />
+                          <div>ASIGNAR</div>
+                        </>
+                      ) : (
+                        <>
+                          <Save className={classes.saveIcon} />
+                          <div>GUARDAR</div>
+                        </>
+                      )
+                    }
                   </Grid>
                 </Button>
               </div>

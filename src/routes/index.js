@@ -12,6 +12,7 @@ export const Router = {
   appSearchMedicalHistoriesConfig: '/dashboard/search-medical-histories-config',
   appSchedule: '/dashboard/schedule',
   appClinicalHistories: '/dashboard/clinical-histories',
+  appAssignAppointment: '/dashboard/assign-appointment',
 
   // API URI
   apiUrlBase: process.env.REACT_APP_API_URL,

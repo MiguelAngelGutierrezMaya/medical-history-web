@@ -19,7 +19,7 @@ export const HeaderUserMedicalHistory = ({ hcName, hcID, userHCDate, userHCHour,
         </Grid>
         <Grid item xs={12} sm={12} md={8} lg={5} style={{ padding: '25px', backgroundColor: 'white', borderRadius: '5px' }}>
           <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
-            <Grid item xs={12} sm={12} md={12} lg={6} style={{ paddingTop: '18px' }}>
+            <Grid item xs={12} sm={12} md={12} lg={6}>
               <InputDate
                 disableFuture={true}
                 disabled={!canEdit}

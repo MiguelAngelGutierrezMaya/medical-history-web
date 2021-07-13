@@ -49,7 +49,7 @@ export const InputTime = ({
         />
       </ThemeProvider>
       <InputField
-        className={classes.root}
+        className={classes.customInput}
         error={error}
         helperText={helperText}
         label={label}

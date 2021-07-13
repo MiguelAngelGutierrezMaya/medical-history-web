@@ -15,11 +15,16 @@ import { IndexCardHolder } from './pages/IndexCardHolder'
 
 // routes
 import { Router } from '../routes'
+
+// Providers
 import { MuiPickersUtilsProvider } from '@material-ui/pickers'
+
+// Pages
 import { ClinicHistory } from './pages/ClinicHistory/index.jsx'
 import { SearchMedicalHistoryConfig } from './pages/SearchMedicalHistoryConfig/index.jsx'
 import { Schedule } from './pages/Schedule/index.jsx'
 import { ClinicalHistory } from './pages/ClinicalHistory/index.jsx'
+import { AssignAppointment } from './pages/AssignAppointment/index.jsx'
 
 const App = () => {
   moment.locale('es')
@@ -67,6 +72,12 @@ const App = () => {
             path={Router.appClinicalHistories}
           >
             <ClinicalHistory />
+          </DashboardRoute>
+          <DashboardRoute
+            hasAuthorization={true}
+            path={Router.appAssignAppointment}
+          >
+            <AssignAppointment />
           </DashboardRoute>
           <DashboardRoute
             hasAuthorization={true}
