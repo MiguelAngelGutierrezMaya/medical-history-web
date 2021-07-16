@@ -4,6 +4,19 @@ import { Router } from '../routes'
 import { Auth } from '../utils/auth'
 
 export const Schedule = {
+  userAvailabilities: async ({user_id, date}) => {
+    return await axios
+      .get(Router.apiUrlBase + Router.apiUserAvailabilities, {
+        params: { user_id, date },
+        headers: { Authorization: `Bearer ${Auth.tokenAuth()}` },
+      })
+      .then((response) => {
+        return response
+      })
+      .catch((error) => {
+        return error.response
+      })
+  },
   availabilities: async (startDate, endDate) => {
     return await axios
       .get(Router.apiUrlBase + Router.apiAvailabilities, {

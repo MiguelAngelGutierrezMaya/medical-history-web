@@ -2,12 +2,15 @@
 import { useStyles, CustomSwitch } from './style'
 
 // components
-import { Button, Grid, FormControlLabel, Typography } from '@material-ui/core'
+import { Button, Grid, FormControlLabel, Typography, Fab } from '@material-ui/core'
 
 import { SelectField } from '../../components/SelectField'
 import { InputField } from '../../components/InputField'
 
-export const TabTwo = ({ form, error, states, programs, handleChangeForm, customHandleChangeForm, addProgram }) => {
+// Icons
+import DeleteIcon from '@material-ui/icons/Delete'
+
+export const TabTwo = ({ form, error, states, programs, programsSelected, handleChangeForm, customHandleChangeForm, handleAddProgram, handleDeleteProgram }) => {
   const classes = useStyles()
 
   return (
@@ -88,11 +91,25 @@ export const TabTwo = ({ form, error, states, programs, handleChangeForm, custom
       </Grid>
       <Grid item xs={2} sm={2} md={2} lg={2} style={{ padding: '15px 0 0 18px' }}>
         <Grid container direction="row" justify="space-between" alignItems="center">
-          <Button className={classes.btnSearch} variant="contained" disableElevation onClick={addProgram}>
+          <Button className={classes.btnSearch} variant="contained" disableElevation onClick={() => handleAddProgram()}>
             Agregar
           </Button>
         </Grid>
       </Grid>
+      {
+        programsSelected.map((el, index) => (
+          <Grid item xs={12} sm={12} md={6} lg={6} key={`program-${index}`}>
+            <Grid container direction="row" justify="flex-start" alignItems="center">
+              <span>{el.text}</span>
+              <div className={classes.actions}>
+                <Fab aria-label="delete" onClick={() => handleDeleteProgram(el.key)}>
+                  <DeleteIcon className={classes.icon} />
+                </Fab>
+              </div>
+            </Grid>
+          </Grid>
+        ))
+      }
     </Grid>
   )
 }

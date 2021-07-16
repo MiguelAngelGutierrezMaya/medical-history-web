@@ -1,6 +1,9 @@
+// React libraries
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-import { useSelector } from 'react-redux'
+// import { useSelector } from 'react-redux'
+
+// Dependencies
 import { v4 as uuid } from 'uuid';
 import moment from 'moment'
 
@@ -16,22 +19,30 @@ import { TabTwo } from '../../containers/AssignAppointmentForm/tabTwo'
 import { Grid } from '@material-ui/core'
 
 // containers
-
+import { ProfessionalSchedule } from '../../containers/ProfessionalSchedule'
 
 // api
+import { Schedule } from '../../../api/schedules'
 import { Patient } from '../../../api/patient'
 import { Country } from '../../../api/country'
 import { Deparment } from '../../../api/deparment'
 import { City } from '../../../api/city'
+import { TypeRequest } from '../../../api/typeRequest'
+import { State } from '../../../api/state'
+import { Program } from '../../../api/program'
+import { ProductionCenter } from '../../../api/productionCenter'
+import { Ips } from '../../../api/ips'
+import { User } from '../../../api/user'
 
 // routes
 import { Router } from '../../../routes'
 
 // reducers
-import { selectedUser } from '../../../reducers/userSlice'
+// import { selectedUser } from '../../../reducers/userSlice'
 
 // utils
 import { ObjFormat } from '../../../utils/obj_format'
+import { Role } from '../../../utils/role'
 
 // styles & assets
 import { useStyles } from './style'
@@ -41,7 +52,7 @@ export const AssignAppointment = () => {
   const classes = useStyles()
 
   //Auth user
-  const user = useSelector(selectedUser)
+  // const user = useSelector(selectedUser)
 
   //DataObj
   const [userObj, setUserObj] = useState({})
@@ -52,17 +63,25 @@ export const AssignAppointment = () => {
   const [professionals, setProfessionals] = useState([])
   const [requestsTypes, setRequestsTypes] = useState([])
   const [states, setStates] = useState([])
+  const [ips, setIps] = useState({})
+  const [productionCenter, setProductionCenter] = useState({})
   const [programs, setPrograms] = useState([])
+  const [programsSelected, setProgramsSelected] = useState([])
   const [countries, setCountries] = useState([])
   const [departments, setDepartments] = useState([])
   const [cities, setCities] = useState([])
+  const [professionalSchedule, setProfessionalSchedule] = useState({})
   const [openView, setOpenView] = useState(false)
   const [showSaveButton, setShowSaveButton] = useState(false)
   const [isActiveAssign, setIsActiveAssign] = useState(false)
   const [canCancel, setCanCancel] = useState(false)
+  const [limitNext, setLimitNext] = useState(false)
+  const [limitPrev, setLimitPrev] = useState(false)
   const [search, setSearch] = useState({ nuip: '', nuipType: '' })
+  const [controlDate, setControlDate] = useState(moment())
   const [popupMessage, setPopupMessage] = useState({
     open: false,
+    openPS: false,
     type: '',
     title: '',
     description: '',
@@ -122,14 +141,14 @@ export const AssignAppointment = () => {
     requestDate: {
       label: 'Fecha solicitud',
       name: 'requestDate',
-      disabled: false,
-      value: ''
+      disabled: true,
+      value: moment()
     },
     requestHour: {
       label: 'Hora solicitud',
       name: 'requestHour',
-      disabled: false,
-      value: ''
+      disabled: true,
+      value: moment()
     },
     searchIps: {
       label: 'Prestador (Código IPS)',
@@ -143,6 +162,8 @@ export const AssignAppointment = () => {
       disabled: false,
       value: ''
     },
+
+    // Tab Two
     states: {
       label: 'Estado',
       name: 'states',
@@ -151,7 +172,7 @@ export const AssignAppointment = () => {
     },
     saleDocument: {
       label: 'Documento de venta (opcional)',
-      name: 'states',
+      name: 'saleDocument',
       disabled: false,
       value: ''
     },
@@ -173,9 +194,6 @@ export const AssignAppointment = () => {
       disabled: false,
       value: ''
     },
-
-    // Tab Two
-
   })
 
   const [error, setError] = useState({
@@ -198,12 +216,47 @@ export const AssignAppointment = () => {
   //
   // Handlers
   //
-
+  const getUserAvailabilities = async (user_id, date) => {
+    if (date.format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
+      setLimitPrev(true)
+      date = date.format('YYYY-MM-DDThh:mm:ss')
+    } else {
+      setLimitPrev(false)
+      date = `${date.format('YYYY-MM-DD')}T00:00:00`
+    }
+    await Schedule.userAvailabilities({ user_id, date }).then((response) => {
+      if (response?.status === 200) {
+        if (response.data.length === 0) setLimitNext(true)
+        else setLimitNext(false)
+        setProfessionalSchedule({
+          schedules: [...response.data],
+          professional: {
+            ...professionals.find(el => el.key === user_id)
+          }
+        })
+      } else if (response?.status === 401) {
+        history.push(Router.appLogout)
+      }
+    })
+  }
   const handleChangeForm = (event) => setForm({ ...form, [event.target.name]: { ...form[event.target.name], value: event.target.value } })
+  const handleChangeProfessional = async (event) => {
+    await getUserAvailabilities(event.target.value, controlDate)
+    return handleChangeForm(event)
+  }
   const customHandleChangeForm = (event, prop) => handleChangeForm({ target: { name: event.target.name, value: event.target[prop] } })
 
   const resetForm = () => setForm({
-    ...form, appointmentId: {
+    ...form,
+    requestDate: {
+      ...form.requestDate,
+      value: moment()
+    },
+    requestHour: {
+      ...form.requestHour,
+      value: moment()
+    },
+    appointmentId: {
       ...initAppointmentId,
       value: uuid()
     }
@@ -216,14 +269,39 @@ export const AssignAppointment = () => {
     setShowSaveButton(false)
   }
 
+  const initVarsData = () => {
+    setProfessionalSchedule({})
+    setProfessionals([])
+    setRequestsTypes([])
+    setStates([])
+    setIps({})
+    setProductionCenter({})
+    setPrograms([])
+    setProgramsSelected([])
+    setCountries([])
+    setDepartments([])
+    setCities([])
+    setProfessionalSchedule({})
+    setOpenView(false)
+    setShowSaveButton(false)
+    setIsActiveAssign(false)
+    setCanCancel(false)
+    setLimitNext(false)
+    setLimitPrev(false)
+    setSearch({ nuip: '', nuipType: '' })
+    setControlDate(moment())
+  }
+
   const reset = () => {
     initVarsControl()
+    initVarsData()
     return resetForm()
   }
 
-  const handleClose = () => setPopupMessage({ ...popupMessage, open: false })
-  const handleOpen = (type, title, description, btnLabel) => setPopupMessage({
-    open: true,
+  const handleClose = () => setPopupMessage({ ...popupMessage, open: false, openPS: false })
+  const handleOpen = (type, title, description, btnLabel, openPS = false) => setPopupMessage({
+    open: openPS ? false : true,
+    openPS,
     btnLabel,
     type,
     title,
@@ -261,16 +339,14 @@ export const AssignAppointment = () => {
         setCanCancel(true)
         setShowSaveButton(true)
       } else if (response?.status === 401) {
-        history.push(Router.appLogin)
+        history.push(Router.appLogout)
       } else {
-        setPopupMessage({
-          open: true,
-          type: 'info',
-          title: 'Sin resultados',
-          description:
-            'No se encontró el paciente con el número de identificacion ingresado',
-          btnLabel: 'Aceptar',
-        })
+        handleOpen(
+          'info',
+          'Sin resultados',
+          'No se encontró el paciente con el número de identificacion ingresado',
+          'Aceptar'
+        )
       }
     })
     await Country.list().then((response) => {
@@ -282,7 +358,7 @@ export const AssignAppointment = () => {
           })),
         )
       } else if (response?.status === 401) {
-        history.push(Router.appLogin)
+        history.push(Router.appLogout)
       }
     })
     await Deparment.list(profile.country).then((response) => {
@@ -294,7 +370,7 @@ export const AssignAppointment = () => {
           })),
         )
       } else if (response?.status === 401) {
-        history.push(Router.appLogin)
+        history.push(Router.appLogout)
       }
     })
     await City.list(profile.department).then((response) => {
@@ -306,12 +382,107 @@ export const AssignAppointment = () => {
           })),
         )
       } else if (response?.status === 401) {
-        history.push(Router.appLogin)
+        history.push(Router.appLogout)
+      }
+    })
+    await TypeRequest.list().then((response) => {
+      if (response?.status === 200) {
+        setRequestsTypes(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogout)
+      }
+    })
+    await State.list().then((response) => {
+      if (response?.status === 200) {
+        setStates(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogout)
+      }
+    })
+    await Program.list().then((response) => {
+      if (response?.status === 200) {
+        setPrograms(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogout)
+      }
+    })
+    await User.getByRole(Role.professional).then((response) => {
+      if (response?.status === 200) {
+        setProfessionals(
+          response.data.map((item) => ({
+            key: item.id,
+            text: `${item.first_name} ${item.second_name} ${item.surname} ${item.second_surname}`,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogout)
       }
     })
   }
 
+  const handleSearchIps = async () => Ips.getByCode(form.searchIps.value).then((response) => {
+    if (response?.status === 200) {
+      setIps({ ...response.data })
+    } else if (response?.status === 401) {
+      history.push(Router.appLogout)
+    }
+  })
+
+  const handleSearchProductionCenter = async () => ProductionCenter.getByCode(form.searchProductionCode.value).then((response) => {
+    if (response?.status === 200) {
+      setProductionCenter({ ...response.data })
+    } else if (response?.status === 401) {
+      history.push(Router.appLogout)
+    }
+  })
+
+  const handleAddProgram = () => {
+    if (!form.programs.value) return
+    const index = programs.findIndex(el => el.key === form.programs.value)
+    const array = [...programsSelected, { ...programs[index] }]
+    const data = Array.from(new Set(array.map(JSON.stringify))).map(JSON.parse);
+    setProgramsSelected([...data])
+  }
+
+  const handleDeleteProgram = (id) => {
+    const array = [...programsSelected]
+    const index = programsSelected.findIndex(el => el.key === id)
+    array.splice(index, 1)
+    setProgramsSelected([...array])
+  }
+
   // constants
+
+  const handleChangeDateControlAndSearch = {
+    'next': async () => {
+      if (limitNext) return
+      let newDate = controlDate.add(7, 'days')
+      setControlDate(newDate)
+      return getUserAvailabilities(form.professionals.value, controlDate)
+    },
+    'prev': async () => {
+      if (limitPrev) return
+      let newDate = controlDate.subtract(7, 'days')
+      setControlDate(newDate)
+      return getUserAvailabilities(form.professionals.value, controlDate)
+    }
+  }
+
   const titles = [
     'DATOS BÁSICOS',
     'UBICACIÓN DE LA HISTORIA CLÍNICA',
@@ -324,8 +495,12 @@ export const AssignAppointment = () => {
       professionals={professionals}
       requestsTypes={requestsTypes}
       handleChangeForm={handleChangeForm}
-      onSearchIps={() => console.log('algo ips')}
-      onSearchProductionCode={() => console.log('algo production code')}
+      handleChangeProfessional={handleChangeProfessional}
+      onSearchIps={() => handleSearchIps()}
+      onSearchProductionCode={() => handleSearchProductionCenter()}
+      openProfessionalSchedule={() => handleOpen('info', '', '', '', true)}
+      ips={ips}
+      productionCenter={productionCenter}
     />,
     <TabTwo
       form={form}
@@ -334,7 +509,9 @@ export const AssignAppointment = () => {
       customHandleChangeForm={(event, prop) => customHandleChangeForm(event, prop)}
       states={states}
       programs={programs}
-      addProgram={() => console.log('add program')}
+      programsSelected={programsSelected}
+      handleAddProgram={handleAddProgram}
+      handleDeleteProgram={handleDeleteProgram}
     />
   ]
 
@@ -380,6 +557,24 @@ export const AssignAppointment = () => {
           </Grid>
         </Grid>
       )}
+      <PopupMessage
+        open={popupMessage.openPS}
+        type={popupMessage.type}
+        title={''}
+        description={''}
+        btnLabel={''}
+        onClose={handleClose}
+        onConfirm={handleClose}
+        customContent={
+          <ProfessionalSchedule
+            professional={professionalSchedule}
+            handleSchedule={() => console.log('algo con schedule')}
+            dataSelected={''}
+            handleChangeNext={() => handleChangeDateControlAndSearch['next']()}
+            handleChangePrev={() => handleChangeDateControlAndSearch['prev']()}
+          />
+        }
+      />
       <PopupMessage
         open={popupMessage.open}
         type={popupMessage.type}

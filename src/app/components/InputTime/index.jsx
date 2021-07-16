@@ -14,6 +14,7 @@ export const InputTime = ({
   views,
   value,
   onChange,
+  onClick,
   error,
   helperText,
   openTo,
@@ -56,14 +57,14 @@ export const InputTime = ({
         type="text"
         name={name}
         placeholder={placeholder}
-        onClick={() => isOpen(!open)}
+        onClick={onClick ? () => onClick() : () => isOpen(!open)}
         inputProps={{
           readOnly: true,
           value: value ? value.format(inputFormat || 'L') : '',
           onChange: () => null,
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={() => isOpen(!open)}>
+              <IconButton onClick={onClick ? () => onClick() : () => isOpen(!open)}>
                 <Schedule />
               </IconButton>
             </InputAdornment>

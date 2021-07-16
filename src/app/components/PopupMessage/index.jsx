@@ -7,7 +7,7 @@ import { ReactComponent as WarningIcon } from '../../../assets/images/warning.sv
 import { ReactComponent as InfoIcon } from '../../../assets/images/info.svg'
 import { useStyles } from './style'
 
-export const PopupMessage = ({ open, type, onClose, onConfirm, title, description, btnLabel }) => {
+export const PopupMessage = ({ open, type, onClose, onConfirm, title, description, btnLabel, customContent }) => {
   const classes = useStyles()
 
   const getIcon = (type) => {
@@ -51,33 +51,41 @@ export const PopupMessage = ({ open, type, onClose, onConfirm, title, descriptio
       }}
     >
       <Fade in={open}>
-        <div className={classes.paper}>
-          <Grid container direction="row" justify="center" alignItems="center">
-            <div className={classes.iconContainer}>
-              <div className={classes.iconBackground}>{getIcon(type)}</div>
-              <Button className={classes.btnClose} onClick={onClose}>
-                <SvgIcon className={classes.iconClose} component={CloseIcon} viewBox="0 0 365.696 365.696" />
-              </Button>
-            </div>
-            <div className={classes.content}>
-              <Typography className={getTitle(type)} component="div">
-                {title}
-              </Typography>
-              <Typography className={classes.description} component="div">
-                {description}
-              </Typography>
-              <Button
-                className={getButtonConfirm(type)}
-                variant="contained"
-                type="submit"
-                disableElevation
-                onClick={onConfirm}
-              >
-                {btnLabel}
-              </Button>
-            </div>
-          </Grid>
-        </div>
+        {
+          customContent
+            ? customContent
+            : (
+              <>
+                <div className={classes.paper}>
+                  <Grid container direction="row" justify="center" alignItems="center">
+                    <div className={classes.iconContainer}>
+                      <div className={classes.iconBackground}>{getIcon(type)}</div>
+                      <Button className={classes.btnClose} onClick={onClose}>
+                        <SvgIcon className={classes.iconClose} component={CloseIcon} viewBox="0 0 365.696 365.696" />
+                      </Button>
+                    </div>
+                    <div className={classes.content}>
+                      <Typography className={getTitle(type)} component="div">
+                        {title}
+                      </Typography>
+                      <Typography className={classes.description} component="div">
+                        {description}
+                      </Typography>
+                      <Button
+                        className={getButtonConfirm(type)}
+                        variant="contained"
+                        type="submit"
+                        disableElevation
+                        onClick={onConfirm}
+                      >
+                        {btnLabel}
+                      </Button>
+                    </div>
+                  </Grid>
+                </div>
+              </>
+            )
+        }
       </Fade>
     </Modal>
   )

@@ -104,6 +104,18 @@ export const useStyles = makeStyles((theme) => ({
       display: 'block',
     },
   },
+  actions: {
+    padding: 0,
+    '& .MuiButtonBase-root': {
+      margin: '0px 5px 0px 5px',
+      width: theme.spacing(5),
+      height: theme.spacing(5),
+      backgroundColor: Color.purpleLight
+    }
+  },
+  icon: {
+    color: Color.blueExtraLight
+  },
 }))
 
 

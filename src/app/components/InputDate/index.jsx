@@ -19,6 +19,7 @@ export const InputDate = ({
   views,
   value,
   onChange,
+  onClick,
   error,
   helperText,
   openTo,
@@ -60,14 +61,14 @@ export const InputDate = ({
         type="text"
         name={name}
         placeholder={placeholder}
-        onClick={() => (!disabled ? isOpen(!open) : null)}
+        onClick={onClick ? () => onClick() : () => (!disabled ? isOpen(!open) : null)}
         inputProps={{
           readOnly: true,
           value: value ? value.format(inputFormat || 'L') : '',
           onChange: () => null,
           endAdornment: (
             <InputAdornment position="end">
-              <IconButton onClick={() => isOpen(!open)}>
+              <IconButton onClick={onClick ? () => onClick() : () => isOpen(!open)}>
                 {/* <SvgIcon component={CalendarIcon} viewBox="0 0 480 480" /> */}
                 <Event className={classes.icon} />
               </IconButton>

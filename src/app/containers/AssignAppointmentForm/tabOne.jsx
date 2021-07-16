@@ -15,8 +15,12 @@ export const TabOne = ({
   professionals,
   requestsTypes,
   handleChangeForm,
+  handleChangeProfessional,
   onSearchIps,
-  onSearchProductionCode
+  onSearchProductionCode,
+  openProfessionalSchedule,
+  ips,
+  productionCenter
 }) => {
   const classes = useStyles()
 
@@ -49,7 +53,7 @@ export const TabOne = ({
           error={error.professionals.hasError}
           helperText={error.professionals.message}
           disabled={form.professionals.disabled}
-          onChange={handleChangeForm}
+          onChange={handleChangeProfessional}
           options={professionals}
         />
       </Grid>
@@ -65,7 +69,8 @@ export const TabOne = ({
           inputFormat="L"
           name={form.appointmentDate.name}
           value={form.appointmentDate.value}
-          onChange={null}
+          onChange={() => null}
+          onClick={() => openProfessionalSchedule()}
           openTo="year"
           views={['year', 'month', 'date']}
         />
@@ -81,7 +86,8 @@ export const TabOne = ({
           helperText={error.appointmentHour.message}
           name={form.appointmentHour.name}
           value={form.appointmentHour.value}
-          onChange={null}
+          onChange={() => null}
+          onClick={() => openProfessionalSchedule()}
           openTo="hours"
           views={['hours', 'minutes']}
           ampm={true}
@@ -149,7 +155,7 @@ export const TabOne = ({
           inputFormat="L"
           name={form.requestDate.name}
           value={form.requestDate.value}
-          onChange={handleChangeForm}
+          onChange={() => null}
           openTo="year"
           views={['year', 'month', 'date']}
         />
@@ -166,7 +172,7 @@ export const TabOne = ({
           inputFormat="hh:mm a"
           name={form.requestHour.name}
           value={form.requestHour.value}
-          onChange={handleChangeForm}
+          onChange={() => null}
           openTo="hours"
           views={['hours', 'minutes']}
           ampm={true}
@@ -195,7 +201,7 @@ export const TabOne = ({
       <Grid item xs={12} sm={12} md={12} lg={6}>
         <div className={classes.boxSearch}>
           <span>Nombre IPS</span><br />
-          <p></p>
+          <p>{ips.name}</p>
         </div>
       </Grid>
       <Grid item xs={8} sm={8} md={8} lg={5}>
@@ -221,7 +227,7 @@ export const TabOne = ({
       <Grid item xs={12} sm={12} md={12} lg={6}>
         <div className={classes.boxSearch}>
           <span>Nombre</span><br />
-          <p></p>
+          <p>{productionCenter.name}</p>
         </div>
       </Grid>
     </Grid>
