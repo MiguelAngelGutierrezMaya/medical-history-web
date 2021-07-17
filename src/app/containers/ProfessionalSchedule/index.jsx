@@ -38,7 +38,16 @@ function SlidePrevArrow(props) {
   );
 }
 
-export const ProfessionalSchedule = ({ professional, handleSchedule, handleChangeNext, handleChangePrev, propStyle = { widthCard: 900, heightCard: 600, resizeHeight: false }, dataSelected = '' }) => {
+export const ProfessionalSchedule = (
+  {
+    professional,
+    handleSchedule,
+    handleChangeNext,
+    handleChangePrev,
+    propStyle = { widthCard: 900, heightCard: 600, resizeHeight: false },
+    dataSelected = ''
+  }
+) => {
 
   const classes = useStyles(propStyle);
 
@@ -150,7 +159,21 @@ export const ProfessionalSchedule = ({ professional, handleSchedule, handleChang
               return (
                 item.time !== '-' ?
                   (
-                    <Button key={index} className={(dataSelected === column.date + ' ' + item.time) ? classes.btnSelected : classes.btnSchedule} disabled={!item.status || (dataSelected === column.date + ' ' + item.time) || moment(column.date + ' ' + item.time).locale('es-ES').format('YYYY-MM-DD HH:mm') < moment().locale('es-ES').format('YYYY-MM-DD HH:mm')} onClick={() => handleSchedule(data, column.date, item.time)}>{item.time}</Button>
+                    <Button
+                      key={index}
+                      className={
+                        (dataSelected === column.date + ' ' + item.time)
+                          ? classes.btnSelected
+                          : classes.btnSchedule
+                      }
+                      disabled={
+                        !item.status ||
+                        (dataSelected === column.date + ' ' + item.time) ||
+                        moment(column.date + ' ' + item.time).locale('es-ES').format('YYYY-MM-DD HH:mm') < moment().locale('es-ES').format('YYYY-MM-DD HH:mm')
+                      }
+                      onClick={() => handleSchedule(data, column.date, item.time)}>
+                      {item.time}
+                    </Button>
                   ) :
                   (
                     <Typography key={index} className={classes.labelSchedule} variant="body1" component="h6">

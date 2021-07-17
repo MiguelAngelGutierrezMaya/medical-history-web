@@ -78,6 +78,7 @@ export const AssignAppointment = () => {
   const [limitNext, setLimitNext] = useState(false)
   const [limitPrev, setLimitPrev] = useState(false)
   const [search, setSearch] = useState({ nuip: '', nuipType: '' })
+  const [dataSelected, setDataSelected] = useState('')
   const [controlDate, setControlDate] = useState(moment())
   const [popupMessage, setPopupMessage] = useState({
     open: false,
@@ -94,9 +95,10 @@ export const AssignAppointment = () => {
   const initAppointmentId = {
     label: 'Identificación de la cita',
     name: 'appointmentId',
+    required: true,
     disabled: true
   }
-  const [form, setForm] = useState({
+  const initialForm = {
     // Tab One
     appointmentId: {
       ...initAppointmentId,
@@ -106,60 +108,70 @@ export const AssignAppointment = () => {
       label: 'Profesional',
       name: 'professionals',
       disabled: false,
+      required: true,
       value: ''
     },
     appointmentDate: {
       label: 'Fecha cita',
       name: 'appointmentDate',
       disabled: true,
+      required: true,
       value: ''
     },
     appointmentHour: {
       label: 'Hora cita',
       name: 'appointmentHour',
       disabled: true,
+      required: true,
       value: ''
     },
     suggestedDate: {
       label: 'Fecha sugerida',
       name: 'suggestedDate',
       disabled: false,
+      required: true,
       value: ''
     },
     suggestedHour: {
       label: 'Hora sugerida',
       name: 'suggestedHour',
       disabled: false,
+      required: true,
       value: ''
     },
     requestType: {
       label: 'Tipo de solicitud',
       name: 'requestType',
       disabled: false,
+      required: true,
       value: ''
     },
     requestDate: {
       label: 'Fecha solicitud',
       name: 'requestDate',
       disabled: true,
+      required: false,
       value: moment()
     },
     requestHour: {
       label: 'Hora solicitud',
       name: 'requestHour',
       disabled: true,
+      required: false,
       value: moment()
     },
     searchIps: {
       label: 'Prestador (Código IPS)',
       name: 'searchIps',
       disabled: false,
+      required: false,
       value: ''
     },
     searchProductionCode: {
       label: 'Código centro de producción',
       name: 'searchProductionCode',
       disabled: false,
+      required: false,
       value: ''
     },
 
@@ -168,35 +180,45 @@ export const AssignAppointment = () => {
       label: 'Estado',
       name: 'states',
       disabled: false,
+      required: true,
       value: ''
     },
     saleDocument: {
       label: 'Documento de venta (opcional)',
       name: 'saleDocument',
       disabled: false,
+      required: false,
       value: ''
     },
     firstTime: {
       label: 'Usuario de primera vez',
       name: 'firstTime',
       disabled: false,
+      required: true,
       value: false
     },
     observations: {
       label: 'Observaciones',
       name: 'observations',
       disabled: false,
+      required: true,
       value: ''
     },
     programs: {
       label: 'Programas',
       name: 'programs',
       disabled: false,
+      required: false,
       value: ''
     },
+  }
+
+  const [form, setForm] = useState({
+    ...initialForm
   })
 
   const [error, setError] = useState({
+    // Tab One
     appointmentId: { hasError: false, message: '' },
     professionals: { hasError: false, message: '' },
     appointmentDate: { hasError: false, message: '' },
@@ -206,10 +228,15 @@ export const AssignAppointment = () => {
     requestType: { hasError: false, message: '' },
     requestDate: { hasError: false, message: '' },
     requestHour: { hasError: false, message: '' },
+    searchIps: { hasError: false, message: '' },
+    searchProductionCode: { hasError: false, message: '' },
+
+    // Tab Two
     states: { hasError: false, message: '' },
     saleDocument: { hasError: false, message: '' },
     firstTime: { hasError: false, message: '' },
-    observations: { hasError: false, message: '' }
+    observations: { hasError: false, message: '' },
+    programs: { hasError: false, message: '' }
   })
 
 
@@ -247,7 +274,7 @@ export const AssignAppointment = () => {
   const customHandleChangeForm = (event, prop) => handleChangeForm({ target: { name: event.target.name, value: event.target[prop] } })
 
   const resetForm = () => setForm({
-    ...form,
+    ...initialForm,
     requestDate: {
       ...form.requestDate,
       value: moment()
@@ -289,12 +316,20 @@ export const AssignAppointment = () => {
     setLimitNext(false)
     setLimitPrev(false)
     setSearch({ nuip: '', nuipType: '' })
+    setDataSelected('')
     setControlDate(moment())
+  }
+
+  const initValidators = () => {
+    const errorObj = { ...error }
+    Object.keys(error).forEach(el => errorObj[el] = { hasError: false, message: '' })
+    setError({ ...errorObj })
   }
 
   const reset = () => {
     initVarsControl()
     initVarsData()
+    initValidators()
     return resetForm()
   }
 
@@ -310,7 +345,7 @@ export const AssignAppointment = () => {
 
   const handleSearch = async () => {
     initVarsControl()
-    var user, profile
+    var user = {}, profile = {}
     await Patient.getPatient(search).then((response) => {
       if (response?.status === 200) {
         user = ObjFormat.camelCase(response.data)
@@ -466,8 +501,46 @@ export const AssignAppointment = () => {
     setProgramsSelected([...array])
   }
 
-  // constants
+  const handleSchedule = (data, date, time) => {
+    const momentDate = moment(`${date}T${time}:00`, "YYYY-MM-DDThh:mm:ss")
+    setForm({
+      ...form,
+      appointmentDate: { ...form.appointmentDate, value: momentDate },
+      appointmentHour: { ...form.appointmentHour, value: momentDate }
+    })
+    setDataSelected(`${date} ${time}`)
+    return handleClose()
+  }
 
+  const handleSaveAppointment = () => {
+    const errorObj = { ...error }
+    const formArray = Object.keys(form)
+    formArray.forEach(el => {
+      const value = typeof form[el].value === 'boolean' ? form[el].value + '' : form[el].value
+      if (form[el].required && !value)
+        errorObj[el] = { hasError: true, message: 'Este campo es obligatorio' }
+      else errorObj[el] = { hasError: false, message: '' }
+    })
+    setError({ ...errorObj })
+    for (let i = 0; i < formArray.length; i++) {
+      if (errorObj[formArray[i]].hasError) return
+    }
+    if (!ips.name || !productionCenter.name) return handleOpen(
+      'error',
+      'Campos obligatorios',
+      'Debes buscar una ips y un centro de producción',
+      'Aceptar'
+    )
+    if (programsSelected.length === 0) return handleOpen(
+      'error',
+      'Campos obligatorios',
+      'Debes agregar al menos un programa',
+      'Aceptar'
+    )
+    console.log('total la data está completa')
+  }
+
+  // constants
   const handleChangeDateControlAndSearch = {
     'next': async () => {
       if (limitNext) return
@@ -498,7 +571,7 @@ export const AssignAppointment = () => {
       handleChangeProfessional={handleChangeProfessional}
       onSearchIps={() => handleSearchIps()}
       onSearchProductionCode={() => handleSearchProductionCenter()}
-      openProfessionalSchedule={() => handleOpen('info', '', '', '', true)}
+      openProfessionalSchedule={() => professionalSchedule.schedules ? handleOpen('info', '', '', '', true) : null}
       ips={ips}
       productionCenter={productionCenter}
     />,
@@ -519,7 +592,7 @@ export const AssignAppointment = () => {
     <>
       <PatientSearchBar
         showSaveButton={showSaveButton}
-        onClickBtnSave={() => console.log('funciona save')}
+        onClickBtnSave={() => handleSaveAppointment()}
         search={search}
         setSearch={setSearch}
         onSearch={handleSearch}
@@ -559,17 +632,13 @@ export const AssignAppointment = () => {
       )}
       <PopupMessage
         open={popupMessage.openPS}
-        type={popupMessage.type}
-        title={''}
-        description={''}
-        btnLabel={''}
         onClose={handleClose}
         onConfirm={handleClose}
         customContent={
           <ProfessionalSchedule
             professional={professionalSchedule}
-            handleSchedule={() => console.log('algo con schedule')}
-            dataSelected={''}
+            handleSchedule={(data, date, time) => handleSchedule(data, date, time)}
+            dataSelected={dataSelected}
             handleChangeNext={() => handleChangeDateControlAndSearch['next']()}
             handleChangePrev={() => handleChangeDateControlAndSearch['prev']()}
           />

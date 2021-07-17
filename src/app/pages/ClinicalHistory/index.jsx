@@ -140,7 +140,7 @@ export const ClinicalHistory = () => {
 
   const handleSearch = async () => {
     setOpenView(false)
-    var user, profile
+    var user = {}, profile = {}
     await Patient.getPatient(search).then((response) => {
       if (response?.status === 200) {
         user = ObjFormat.camelCase(response.data)
@@ -248,23 +248,24 @@ export const ClinicalHistory = () => {
         )
       }
     })
-    await UserMedicalHistory.list(user.id).then((response) => {
-      if (response?.status === 200) {
-        setUserMedicalHistories(
-          response.data?.map((item) => ({
-            id: item.id,
-            date: moment(item.date, 'YYYY-MM-DD').format('L'),
-            title: item.medical_history.name,
-            profesional: `${item.professional.first_name} ${item.professional.second_name}`,
-            clinic_history: (
-              <Fab color="primary" aria-label="description" onClick={() => showUserMedicalHistory(item)}>
-                <DescriptionIcon />
-              </Fab>
-            )
-          })),
-        )
-      }
-    })
+    if (user.id)
+      await UserMedicalHistory.list(user.id).then((response) => {
+        if (response?.status === 200) {
+          setUserMedicalHistories(
+            response.data?.map((item) => ({
+              id: item.id,
+              date: moment(item.date, 'YYYY-MM-DD').format('L'),
+              title: item.medical_history.name,
+              profesional: `${item.professional.first_name} ${item.professional.second_name}`,
+              clinic_history: (
+                <Fab color="primary" aria-label="description" onClick={() => showUserMedicalHistory(item)}>
+                  <DescriptionIcon />
+                </Fab>
+              )
+            })),
+          )
+        }
+      })
   }
 
   const initData = () => {
