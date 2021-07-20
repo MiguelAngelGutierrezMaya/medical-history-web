@@ -95,7 +95,7 @@ export const TabOne = ({
       </Grid>
       <Grid item xs={12} sm={12} md={6} lg={3}>
         <InputDate
-          disableFuture={true}
+          disableFuture={false}
           disabled={form.suggestedDate.disabled}
           error={error.suggestedDate.hasError}
           helperText={error.suggestedDate.message}

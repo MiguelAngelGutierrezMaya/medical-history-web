@@ -1,7 +1,7 @@
 // React libraries
 import { useState } from 'react'
 import { useHistory } from 'react-router'
-// import { useSelector } from 'react-redux'
+import { useSelector } from 'react-redux'
 
 // Dependencies
 import { v4 as uuid } from 'uuid';
@@ -33,12 +33,13 @@ import { Program } from '../../../api/program'
 import { ProductionCenter } from '../../../api/productionCenter'
 import { Ips } from '../../../api/ips'
 import { User } from '../../../api/user'
+import { Appointment } from '../../../api/appointment'
 
 // routes
 import { Router } from '../../../routes'
 
 // reducers
-// import { selectedUser } from '../../../reducers/userSlice'
+import { selectedUser } from '../../../reducers/userSlice'
 
 // utils
 import { ObjFormat } from '../../../utils/obj_format'
@@ -52,21 +53,14 @@ export const AssignAppointment = () => {
   const classes = useStyles()
 
   //Auth user
-  // const user = useSelector(selectedUser)
-
-  //DataObj
-  const [userObj, setUserObj] = useState({})
-  const [profilerObj, setProfilerObj] = useState({})
+  const userAuth = useSelector(selectedUser)
 
   // states
   const history = useHistory()
   const [professionals, setProfessionals] = useState([])
   const [requestsTypes, setRequestsTypes] = useState([])
   const [states, setStates] = useState([])
-  const [ips, setIps] = useState({})
-  const [productionCenter, setProductionCenter] = useState({})
   const [programs, setPrograms] = useState([])
-  const [programsSelected, setProgramsSelected] = useState([])
   const [countries, setCountries] = useState([])
   const [departments, setDepartments] = useState([])
   const [cities, setCities] = useState([])
@@ -117,6 +111,9 @@ export const AssignAppointment = () => {
       disabled: true,
       required: true,
       value: ''
+    },
+    appointmentDuration: {
+      value: 0
     },
     appointmentHour: {
       label: 'Hora cita',
@@ -216,7 +213,9 @@ export const AssignAppointment = () => {
   const [form, setForm] = useState({
     ...initialForm
   })
-
+  const [ips, setIps] = useState({})
+  const [productionCenter, setProductionCenter] = useState({})
+  const [programsSelected, setProgramsSelected] = useState([])
   const [error, setError] = useState({
     // Tab One
     appointmentId: { hasError: false, message: '' },
@@ -239,6 +238,9 @@ export const AssignAppointment = () => {
     programs: { hasError: false, message: '' }
   })
 
+  //DataObj
+  const [userObj, setUserObj] = useState({})
+  const [profilerObj, setProfilerObj] = useState({})
 
   //
   // Handlers
@@ -246,7 +248,7 @@ export const AssignAppointment = () => {
   const getUserAvailabilities = async (user_id, date) => {
     if (date.format('YYYY-MM-DD') === moment().format('YYYY-MM-DD')) {
       setLimitPrev(true)
-      date = date.format('YYYY-MM-DDThh:mm:ss')
+      date = date.format('YYYY-MM-DDTHH:mm:ss')
     } else {
       setLimitPrev(false)
       date = `${date.format('YYYY-MM-DD')}T00:00:00`
@@ -309,10 +311,6 @@ export const AssignAppointment = () => {
     setDepartments([])
     setCities([])
     setProfessionalSchedule({})
-    setOpenView(false)
-    setShowSaveButton(false)
-    setIsActiveAssign(false)
-    setCanCancel(false)
     setLimitNext(false)
     setLimitPrev(false)
     setSearch({ nuip: '', nuipType: '' })
@@ -326,8 +324,8 @@ export const AssignAppointment = () => {
     setError({ ...errorObj })
   }
 
-  const reset = () => {
-    initVarsControl()
+  const reset = (varsControl = true) => {
+    if (varsControl) initVarsControl()
     initVarsData()
     initValidators()
     return resetForm()
@@ -501,18 +499,19 @@ export const AssignAppointment = () => {
     setProgramsSelected([...array])
   }
 
-  const handleSchedule = (data, date, time) => {
+  const handleSchedule = (duration, date, time) => {
     const momentDate = moment(`${date}T${time}:00`, "YYYY-MM-DDThh:mm:ss")
     setForm({
       ...form,
       appointmentDate: { ...form.appointmentDate, value: momentDate },
-      appointmentHour: { ...form.appointmentHour, value: momentDate }
+      appointmentHour: { ...form.appointmentHour, value: momentDate },
+      appointmentDuration: { value: parseInt(duration) }
     })
     setDataSelected(`${date} ${time}`)
     return handleClose()
   }
 
-  const handleSaveAppointment = () => {
+  const handleSaveAppointment = async () => {
     const errorObj = { ...error }
     const formArray = Object.keys(form)
     formArray.forEach(el => {
@@ -537,7 +536,27 @@ export const AssignAppointment = () => {
       'Debes agregar al menos un programa',
       'Aceptar'
     )
-    console.log('total la data está completa')
+    const formData = {}
+    formArray.forEach(el => formData[el] = form[el].value)
+    delete formData.requestDate
+    delete formData.suggestedDate
+    delete formData.appointmentDate
+    const response = await Appointment.savePatienAppointment({
+      ...ObjFormat.snakeCase(formData),
+      request_datetime: `${form.requestDate.value.format('YYYY-MM-DD')}T${form.requestHour.value.format('HH:mm:ss')}`,
+      suggested_datetime: `${form.suggestedDate.value.format('YYYY-MM-DD')}T${form.suggestedHour.value.format('HH:mm:ss')}`,
+      start_date: `${form.appointmentDate.value.format('YYYY-MM-DD')}T${form.appointmentHour.value.format('HH:mm')}:00`,
+      ips: JSON.stringify({ ...ips }),
+      production_center: JSON.stringify({ ...productionCenter }),
+      programs: JSON.stringify([...programsSelected]),
+      patient: userObj,
+      user: userAuth
+    })
+    if (response.status === 201) {
+      handleOpen('success', 'La cita ha sido programada', '', 'Cerrar alerta')
+      return reset(false)
+    } else
+      return handleOpen('error', 'Error', JSON.stringify(response.data), 'Cerrar alerta')
   }
 
   // constants
@@ -637,7 +656,7 @@ export const AssignAppointment = () => {
         customContent={
           <ProfessionalSchedule
             professional={professionalSchedule}
-            handleSchedule={(data, date, time) => handleSchedule(data, date, time)}
+            handleSchedule={(duration, date, time) => handleSchedule(duration, date, time)}
             dataSelected={dataSelected}
             handleChangeNext={() => handleChangeDateControlAndSearch['next']()}
             handleChangePrev={() => handleChangeDateControlAndSearch['prev']()}

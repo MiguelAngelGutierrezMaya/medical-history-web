@@ -141,7 +141,7 @@ export const ProfessionalSchedule = (
           }
         }
 
-        arr_result.push({ "weekday": schedule.weekday, "date": temp_date, "data": timeTemp })
+        arr_result.push({ "weekday": schedule.weekday, "duration": schedule.duration, "date": temp_date, "data": timeTemp })
       })
 
       return (
@@ -171,7 +171,7 @@ export const ProfessionalSchedule = (
                         (dataSelected === column.date + ' ' + item.time) ||
                         moment(column.date + ' ' + item.time).locale('es-ES').format('YYYY-MM-DD HH:mm') < moment().locale('es-ES').format('YYYY-MM-DD HH:mm')
                       }
-                      onClick={() => handleSchedule(data, column.date, item.time)}>
+                      onClick={() => handleSchedule(column.duration, column.date, item.time)}>
                       {item.time}
                     </Button>
                   ) :

@@ -44,6 +44,7 @@ export const Router = {
   apiHcOpenPlace: '/api/hc-open-place/',
   apiHcTransferTo: '/api/hc-transfer-to/',
   apiHcConfig: '/api/medical-history-config/',
+  apiPatientAppointments: '/api/patient-appointments/',
   apiUserHc: '/api/user-medical-history/',
   apiUser: '/api/user/',
   apiUserHcDetail: '/api/user-medical-history-detail/:umh_id',

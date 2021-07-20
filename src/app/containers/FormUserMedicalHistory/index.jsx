@@ -145,7 +145,7 @@ export const FormUserMedicalHistory = (
   const container = (data) => {
     const { items } = data
     return (
-      <ResponsiveReactGridLayout>
+      <ResponsiveReactGridLayout isDraggable={false} isResizable={false}>
         {items?.reverse().map((el, i) => createElement(el, i, data.id))}
       </ResponsiveReactGridLayout>
     )
