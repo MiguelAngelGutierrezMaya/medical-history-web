@@ -355,46 +355,54 @@ export const ClinicalHistory = () => {
             ></PatientInfo>
           </Grid>
           <Grid className={classes.spacing} item lg={7} md={6} sm={12} xs={12}>
-            <HeaderBasic
-              type={typeView}
-              onClick={() => handleChangeView("two")}
-              onReturn={() => handleChangeView("one")}
-              subtitle={'Seleccionar tipo de Historia Clinica'}
-            ></HeaderBasic>
-            {
-              typeView === 'one' ? (
-                <PatientMedicalHistories data={userMedicalHistories}></PatientMedicalHistories>
-              ) : typeView === 'two' ? (
-                <>
-                  <CardHCContainer list={medicalHistories} onClick={(el) => handleSearchConfigMedicalHistory(el)}></CardHCContainer>
-                </>
-              ) : (
-                <>
-                  <FormUserMedicalHistory
-                    hcData={hcData}
-                    date={date}
-                    hour={hour}
-                    content={content}
-                    titles={titles}
-                    diagnosesList={diagnosesList}
-                    categoriesList={categoriesList}
-                    diagnosesCategories={diagnosesCategories}
-                    diagnoseSelected={diagnoseSelected}
-                    categorySelected={categorySelected}
-                    itemsValue={itemsValue}
-                    canEdit={canEdit}
-                    changeValueItem={handleChangeValueItem}
-                    handleChangeDiagnoses={(event) => selectDiagnose(event.target.value)}
-                    handleChangeCategories={(event) => selectCategory(event.target.value)}
-                    handleChangeDate={(event) => setDate(event.target.value)}
-                    handleChangeHour={(event) => setHour(event.target.value)}
-                    addDiagnoseCategory={() => addDiagnoseCategory()}
-                    deleteDiagnoseCategory={(key) => deleteDiagnoseCategory(key)}
-                    onClickBtnSave={handleSaveData}
-                  ></FormUserMedicalHistory>
-                </>
-              )
-            }
+            <Grid
+              container
+              direction="row"
+              alignItems="flex-start"
+            >
+              <Grid className={classes.spacing} item lg={12} md={12} sm={12} xs={12}>
+                <HeaderBasic
+                  type={typeView}
+                  onClick={() => handleChangeView("two")}
+                  onReturn={() => handleChangeView("one")}
+                  subtitle={'Seleccionar tipo de Historia Clinica'}
+                ></HeaderBasic>
+              </Grid>
+              <Grid className={classes.spacing} item lg={12} md={12} sm={12} xs={12}>
+                {
+                  typeView === 'one' ? (
+                    <PatientMedicalHistories data={userMedicalHistories}></PatientMedicalHistories>
+                  ) : typeView === 'two' ? (
+                    <>
+                      <CardHCContainer list={medicalHistories} onClick={(el) => handleSearchConfigMedicalHistory(el)}></CardHCContainer>
+                    </>
+                  ) : (
+                    <FormUserMedicalHistory
+                      hcData={hcData}
+                      date={date}
+                      hour={hour}
+                      content={content}
+                      titles={titles}
+                      diagnosesList={diagnosesList}
+                      categoriesList={categoriesList}
+                      diagnosesCategories={diagnosesCategories}
+                      diagnoseSelected={diagnoseSelected}
+                      categorySelected={categorySelected}
+                      itemsValue={itemsValue}
+                      canEdit={canEdit}
+                      changeValueItem={handleChangeValueItem}
+                      handleChangeDiagnoses={(event) => selectDiagnose(event.target.value)}
+                      handleChangeCategories={(event) => selectCategory(event.target.value)}
+                      handleChangeDate={(event) => setDate(event.target.value)}
+                      handleChangeHour={(event) => setHour(event.target.value)}
+                      addDiagnoseCategory={() => addDiagnoseCategory()}
+                      deleteDiagnoseCategory={(key) => deleteDiagnoseCategory(key)}
+                      onClickBtnSave={handleSaveData}
+                    ></FormUserMedicalHistory>
+                  )
+                }
+              </Grid>
+            </Grid>
           </Grid>
         </Grid>
       )}

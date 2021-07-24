@@ -324,8 +324,8 @@ export const AssignAppointment = () => {
     setError({ ...errorObj })
   }
 
-  const reset = (varsControl = true) => {
-    if (varsControl) initVarsControl()
+  const reset = () => {
+    initVarsControl()
     initVarsData()
     initValidators()
     return resetForm()
@@ -554,7 +554,7 @@ export const AssignAppointment = () => {
     })
     if (response.status === 201) {
       handleOpen('success', 'La cita ha sido programada', '', 'Cerrar alerta')
-      return reset(false)
+      return reset()
     } else
       return handleOpen('error', 'Error', JSON.stringify(response.data), 'Cerrar alerta')
   }

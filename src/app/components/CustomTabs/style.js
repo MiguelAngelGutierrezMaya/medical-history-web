@@ -41,7 +41,8 @@ export const StyledTab = withStyles((theme) => ({
 export const useStyles = makeStyles((theme) => ({
   root: {
     flexGrow: 1,
-    padding: 24,
+    width: 100,
+    padding: '24px 0px 24px 0px',
   },
   padding: {
     padding: '12px 24px 18px',

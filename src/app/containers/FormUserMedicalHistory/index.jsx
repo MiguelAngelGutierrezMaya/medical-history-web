@@ -269,7 +269,7 @@ export const FormUserMedicalHistory = (
   }
 
   return (
-    <>
+    <Grid container>
       <HeaderUserMedicalHistory
         hcName={hcData.text}
         hcID={hcData.key}
@@ -281,7 +281,7 @@ export const FormUserMedicalHistory = (
         onClickBtnSave={onClickBtnSave}
       ></HeaderUserMedicalHistory>
       <CustomTabs titles={titles} contents={getContent()} variant={'scrollable'}></CustomTabs>
-    </>
+    </Grid>
   )
 }
 

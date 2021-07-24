@@ -5,14 +5,12 @@ export const useStyles = makeStyles((theme) => ({
   root: {
     backgroundColor: 'transparent',
     padding: '0px 20px 15px 20px',
-  },
-  subtitle: {
-    color: Color.purpleLight
-  },
-  grid: {
     '& > .MuiGrid-item': {
       padding: '8px 18px',
     },
+  },
+  subtitle: {
+    color: Color.purpleLight
   },
   btnSave: {
     backgroundColor: Color.green,
