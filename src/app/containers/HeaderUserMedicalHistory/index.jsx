@@ -12,11 +12,11 @@ export const HeaderUserMedicalHistory = ({ hcName, hcID, userHCDate, userHCHour,
 
   return (
     <>
-      <Grid item xs={12} sm={12} md={12} lg={5}>
+      <Grid item xs={12} sm={12} md={6} lg={5}>
         <h4>Historia Clínica: {hcName}</h4>
         <span className={classes.subtitle}>ID: {hcID}</span>
       </Grid>
-      <Grid item xs={12} sm={12} md={8} lg={5} style={{ padding: '25px', backgroundColor: 'white', borderRadius: '5px' }}>
+      <Grid item xs={12} sm={12} md={6} lg={5} style={{ padding: '25px', backgroundColor: 'white', borderRadius: '5px' }}>
         <Grid container direction="row" justify="flex-start" alignItems="center" spacing={2}>
           <Grid item xs={12} sm={12} md={12} lg={6}>
             <InputDate
@@ -50,7 +50,7 @@ export const HeaderUserMedicalHistory = ({ hcName, hcID, userHCDate, userHCHour,
           </Grid>
         </Grid>
       </Grid>
-      <Grid item xs={12} sm={12} md={4} lg={2} style={{ padding: '15px 0 0 18px', textAlign: 'end' }}>
+      <Grid item xs={12} sm={12} md={4} lg={2} style={{ padding: '15px 0 0 0px' }}>
         {
           canEdit ? (
             <Button className={classes.btnSave} variant="contained" disableElevation onClick={onClickBtnSave}>

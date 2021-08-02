@@ -13,10 +13,12 @@ export const InputField = ({
   inputLabelProps,
   multiline,
   rows,
-  rowsMax
+  rowsMax,
+  autoFocus
 }) => {
   return (
     <CustomTextField
+      autoFocus={autoFocus || false}
       error={error || false}
       helperText={helperText || ''}
       className={className}

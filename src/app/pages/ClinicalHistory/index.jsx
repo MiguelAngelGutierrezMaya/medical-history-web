@@ -121,8 +121,8 @@ export const ClinicalHistory = () => {
   }
 
   const handleChangeValueItem = (el, value, focus) => {
-    const index = itemsValue.findIndex(elem => elem.item.id === el.id)
-    const data = [...itemsValue]
+    const data = [...itemsValue].map(el => ({ ...el, focus: false }))
+    const index = data.findIndex(elem => elem.item.id === el.id)
     if (index === -1) data.push({ item: { ...el }, value, focus })
     else data[index] = { item: { ...el }, value, focus }
     setItemsValue([...data])
@@ -277,13 +277,18 @@ export const ClinicalHistory = () => {
     setHour(null)
   }
 
+  const modifyDataGroups = (groups) => groups.map(el => ({
+    ...el,
+    items: el.items.reverse()
+  }))
+
   const showMedicalHistory = async (medHistory, canEdit) => {
     const medical_history = await MedicalHistory.getMedicalHistory(medHistory.key)
     initData()
     handleChangeView("three")
     setHcData({ ...medHistory })
     setTitles([...medical_history.data.groups.reverse().map(el => el.title.toUpperCase()), "DIAGNÓSTICO"])
-    setContent([...medical_history.data.groups])
+    setContent([...modifyDataGroups(medical_history.data.groups)])
     setCanEdit(canEdit)
   }
 
@@ -345,7 +350,7 @@ export const ClinicalHistory = () => {
           direction="row"
           alignItems="flex-start"
         >
-          <Grid className={classes.spacing} item lg={5} md={6} sm={12} xs={12}>
+          <Grid className={classes.spacing} item lg={5} md={5} sm={12} xs={12}>
             <PatientInfo
               user={userObj}
               profile={profilerObj}
@@ -354,7 +359,7 @@ export const ClinicalHistory = () => {
               cities={cities}
             ></PatientInfo>
           </Grid>
-          <Grid className={classes.spacing} item lg={7} md={6} sm={12} xs={12}>
+          <Grid className={classes.spacing} item lg={7} md={7} sm={12} xs={12}>
             <Grid
               container
               direction="row"

@@ -51,38 +51,38 @@ export const FormUserMedicalHistory = (
     const index = itemsValue.findIndex(elem => elem.item.id === el.id)
     const value = index !== -1 ? itemsValue[index].value : ''
     const focus = index !== -1 ? itemsValue[index].focus : false
+    const inputProps = {
+      disabled: !canEdit,
+      onChange: (event) => changeValueItem(el, event.target.value, true),
+      onFocus: function (event) {
+        if (focus) {
+          var val = event.target.value;
+          event.target.value = '';
+          event.target.value = val;
+        }
+      },
+      value: value
+    }
     const objTextFields = {
       'text-field': (
         <InputField
+          autoFocus={focus}
           key={`${parentID}-${component.label}-item-${i}`}
           className={classes.customInput}
           label={component.label}
           type="text"
           name="label"
           inputProps={
-            focus ? {
-              disabled: !canEdit,
-              onBlur: (event) => changeValueItem(el, event.target.value, false)
-            } : {
-              disabled: !canEdit,
-              onFocus: (event) => changeValueItem(el, event.target.value, true),
-              value: value
-            }
+            { ...inputProps }
           }
         />
       ),
       'text-area': (
         <InputField
+          autoFocus={focus}
           key={`${parentID}-${component.label}-item-${i}`}
           inputProps={
-            focus ? {
-              disabled: !canEdit,
-              onBlur: (event) => changeValueItem(el, event.target.value, false)
-            } : {
-              disabled: !canEdit,
-              onFocus: (event) => changeValueItem(el, event.target.value, true),
-              value: value
-            }
+            { ...inputProps }
           }
           className={classes.customInput}
           label={component.label}
@@ -143,10 +143,10 @@ export const FormUserMedicalHistory = (
   }
 
   const container = (data) => {
-    const { items } = data
+    const { items, id, name } = data
     return (
-      <ResponsiveReactGridLayout isDraggable={false} isResizable={false}>
-        {items?.reverse().map((el, i) => createElement(el, i, data.id))}
+      <ResponsiveReactGridLayout isDraggable={false} isResizable={false} key={`${id}-${name}`}>
+        {items?.map((el, i) => createElement(el, i, id))}
       </ResponsiveReactGridLayout>
     )
   }
@@ -280,7 +280,9 @@ export const FormUserMedicalHistory = (
         handleChangeHour={handleChangeHour}
         onClickBtnSave={onClickBtnSave}
       ></HeaderUserMedicalHistory>
-      <CustomTabs titles={titles} contents={getContent()} variant={'scrollable'}></CustomTabs>
+      <Grid item xs={12} sm={12} md={12} lg={12} style={{width: '100%'}}>
+        <CustomTabs titles={titles} contents={getContent()} variant={'scrollable'}></CustomTabs>
+      </Grid>
     </Grid>
   )
 }
