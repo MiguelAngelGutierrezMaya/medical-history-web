@@ -2,6 +2,9 @@ import { makeStyles, withStyles, Switch, Radio } from '@material-ui/core'
 import { Color } from '../../../assets/js/color'
 
 export const useStyles = makeStyles((theme) => ({
+  listItems: {
+    backgroundColor: theme.palette.background.paper,
+  },
   customInput: {
     '& .MuiInput-underline:before': {
       borderBottom: `2px solid ${Color.blueDark}`,
@@ -69,6 +72,12 @@ export const useStyles = makeStyles((theme) => ({
   },
   containers: {
     padding: '10px'
+  },
+  buttonContainers: {
+    padding: '10px',
+    display: 'flex',
+    alignItems: 'flex-end',
+    justifyContent: 'flex-end'
   },
   items: {
     marginTop: '20px'

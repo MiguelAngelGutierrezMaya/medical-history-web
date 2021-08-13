@@ -38,6 +38,11 @@ export const Router = {
   apiTypeRequest: '/api/type-request/',
   apiState: '/api/state/',
   apiProgram: '/api/program/',
+  apiDiagnosticAids: '/api/diagnostic-aids/',
+  apiExternalCause: '/api/external-cause/',
+  apiMedicine: '/api/medicine/',
+  apiPresentations: '/api/presentations/',
+  apiSpecialist: '/api/specialists/',
   apiProductionCenter: '/api/production-center/',
   apiIps: '/api/ips/',
   apiRelationshipPersonInCharge: '/api/relationship-person-in-charge/',
@@ -52,5 +57,6 @@ export const Router = {
   apiAvailabilities: '/api/availabilities/',
   apiUserAvailabilities: '/api/user-availabilities/',
   apiAppointments: '/api/schedules/',
+  apiAppointmentPurposes: '/api/appointment-purposes/',
   apiReschedule: '/api/reschedule/',
 }

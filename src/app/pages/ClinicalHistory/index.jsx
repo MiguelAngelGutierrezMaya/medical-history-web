@@ -30,6 +30,12 @@ import { MedicalHistory } from '../../../api/medicalHistory'
 import { UserMedicalHistory } from '../../../api/userMedicalHistory'
 import { Diagnose } from '../../../api/diagnose'
 import { Category } from '../../../api/category'
+import { Appointment } from '../../../api/appointment'
+import { DiagnosticAids } from '../../../api/diagnosticAids'
+import { ExternalCause } from '../../../api/externalCause'
+import { Medicine } from '../../../api/medicine'
+import { Presentation } from '../../../api/presentation'
+import { Specialist } from '../../../api/specialist'
 
 // routes
 import { Router } from '../../../routes'
@@ -78,12 +84,32 @@ export const ClinicalHistory = () => {
   //
   // FormData
   //
+  const [specialistsList, setSpecialistsList] = useState([])
+  const [specialistsListSelected, setSpecialistsListSelected] = useState([])
+  const [specialistSelected, setSpecialistSelected] = useState({})
+
+  const [diagnosticAidsList, setDiagnosticAidsList] = useState([])
+  const [diagnosticAidsListSelected, setDiagnosticAidsListSelected] = useState([])
+  const [diagnosticAidSelected, setDiagnosticAidSelected] = useState({})
+
+  const [medicinesList, setMedicinesList] = useState([])
+  const [medicinesListSelected, setMedicinesListSelected] = useState([])
+  const [medicineSelected, setMedicineSelected] = useState({})
+  const [medicineObservation, setMedicineObservation] = useState('')
+  const [medicineQuantity, setMedicineQuantity] = useState(0)
+  const [presentationsList, setPresentationsList] = useState([])
+  const [presentationSelected, setPresentationSelected] = useState({})
+
   const [diagnosesList, setDiagnosesList] = useState([])
   const [categoriesList, setCategoriesList] = useState([])
+  const [appointmentPurposesList, setAppointmentPurposesList] = useState([])
+  const [externalCausesList, setExternalCausesList] = useState([])
   const [hcData, setHcData] = useState({})
   const [diagnosesCategories, setDiagnosesCategories] = useState([])
   const [diagnoseSelected, setDiagnoseSelected] = useState({})
   const [categorySelected, setCategorySelected] = useState({})
+  const [appointmentPurposeSelected, setAppointmentPurposeSelected] = useState({})
+  const [externalCauseSelected, setExternalCauseSelected] = useState({})
   const [date, setDate] = useState(null)
   const [hour, setHour] = useState(null)
   const [itemsValue, setItemsValue] = useState([])
@@ -94,6 +120,59 @@ export const ClinicalHistory = () => {
 
   const selectDiagnose = (key) => setDiagnoseSelected({ ...diagnosesList.find(el => el.key === key) })
   const selectCategory = (key) => setCategorySelected({ ...categoriesList.find(el => el.key === key) })
+  const selectSpecialist = (value) => setSpecialistSelected({ ...value })
+  const selectDiagnosticAid = (value) => setDiagnosticAidSelected({ ...value })
+  const selectMedicine = (value) => setMedicineSelected({ ...value })
+  const selectPresentation = (key) => setPresentationSelected({ ...presentationsList.find(el => el.key === key) })
+  const selectAppointmentPurpose = (key) => setAppointmentPurposeSelected({ ...appointmentPurposesList.find(el => el.key === key) })
+  const selectExternalCause = (key) => setExternalCauseSelected({ ...externalCausesList.find(el => el.key === key) })
+  const changeObservation = (value) => setMedicineObservation(value)
+  const changeQuantity = (value) => setMedicineQuantity(value)
+
+  const genericListSelected = (array, objSelected) => {
+    const arr = [...array]
+    if (objSelected.key) {
+      const inArray = arr.find(el => el.key === objSelected.key)
+      if (inArray === undefined) arr.push({ ...objSelected })
+    }
+    return arr
+  }
+
+  const addSpecialist = () => setSpecialistsListSelected([
+    ...genericListSelected(specialistsListSelected, specialistSelected)
+  ])
+
+  const addDiagnosticAid = () => setDiagnosticAidsListSelected([
+    ...genericListSelected(diagnosticAidsListSelected, diagnosticAidSelected)
+  ])
+
+  const addMedicine = () => setMedicinesListSelected([
+    ...genericListSelected(medicinesListSelected, {
+      ...medicineSelected,
+      presentationSelected: presentationSelected.text || '',
+      medicineObservation,
+      medicineQuantity
+    })
+  ])
+
+  const genericRemove = (array, objSelected) => {
+    const arr = [...array]
+    const index = arr.findIndex(el => el.key === objSelected.key)
+    if (index !== -1) arr.splice(index, 1)
+    return arr
+  }
+
+  const removeSpecialist = (specialist) => setSpecialistsListSelected([
+    ...genericRemove(specialistsListSelected, specialist)
+  ])
+
+  const removeDiagnosticAid = (diagnosticAid) => setDiagnosticAidsListSelected([
+    ...genericRemove(diagnosticAidsListSelected, diagnosticAid)
+  ])
+
+  const removeMedicine = (medicine) => setMedicinesListSelected([
+    ...genericRemove(medicinesListSelected, medicine)
+  ])
 
   const initSelects = () => {
     setDiagnoseSelected({})
@@ -238,12 +317,82 @@ export const ClinicalHistory = () => {
         history.push(Router.appLogin)
       }
     })
+    await DiagnosticAids.list().then((response) => {
+      if (response?.status === 200) {
+        setDiagnosticAidsList(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogin)
+      }
+    })
+    await ExternalCause.list().then((response) => {
+      if (response?.status === 200) {
+        setExternalCausesList(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogin)
+      }
+    })
+    await Medicine.list().then((response) => {
+      if (response?.status === 200) {
+        setMedicinesList(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogin)
+      }
+    })
+    await Presentation.list().then((response) => {
+      if (response?.status === 200) {
+        setPresentationsList(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogin)
+      }
+    })
+    await Specialist.list().then((response) => {
+      if (response?.status === 200) {
+        setSpecialistsList(
+          response.data.map((item) => ({
+            key: item.id,
+            text: item.description,
+          })),
+        )
+      } else if (response?.status === 401) {
+        history.push(Router.appLogin)
+      }
+    })
     await MedicalHistory.list().then((response) => {
       if (response?.status === 200) {
         setMedicalHistories(
           response.data?.map((item) => ({
             key: item.id,
             text: item.name,
+          })),
+        )
+      }
+    })
+    await Appointment.listAppointmentPurpose().then((response) => {
+      if (response?.status === 200) {
+        setAppointmentPurposesList(
+          response.data?.map((item) => ({
+            key: item.id,
+            text: item.description,
           })),
         )
       }
@@ -287,7 +436,7 @@ export const ClinicalHistory = () => {
     initData()
     handleChangeView("three")
     setHcData({ ...medHistory })
-    setTitles([...medical_history.data.groups.reverse().map(el => el.title.toUpperCase()), "DIAGNÓSTICO"])
+    setTitles([...medical_history.data.groups.reverse().map(el => el.title.toUpperCase()), "FINALIDAD DE CONSULTA", "DIAGNÓSTICO", "REMISIONES"])
     setContent([...modifyDataGroups(medical_history.data.groups)])
     setCanEdit(canEdit)
   }
@@ -299,11 +448,17 @@ export const ClinicalHistory = () => {
   const handleSaveData = async () => {
     if (!date || !hour) return handleOpen('error', 'Error', 'La fecha y la hora son obligatorias', 'Cerrar alerta')
     if (itemsValue.length === 0) return handleOpen('error', 'Error', 'Debes contestar al menos 1 item del formulario', 'Cerrar alerta')
+    const func = el => JSON.stringify(el)
     const response = await UserMedicalHistory.save({
       date: `${date.format('YYYY-MM-DD')}T${hour.format('HH:mm:ss')}`,
       medical_history_id: hcData.key,
       itemsValue,
       diagnosesCategories,
+      specialists: specialistsListSelected.map(func),
+      diagnosticAids: diagnosticAidsListSelected.map(func),
+      medicines: medicinesListSelected.map(func),
+      appointmentPurpose: appointmentPurposeSelected.key ? `${appointmentPurposeSelected.key}-${appointmentPurposeSelected.text}` : 'none',
+      externalCause: externalCauseSelected.key ? `${externalCauseSelected.key}-${externalCauseSelected.text}` : 'none',
       user_id: userObj.id,
       professional_id: user.id
     })
@@ -319,10 +474,18 @@ export const ClinicalHistory = () => {
   const showUserMedicalHistory = async (item) => {
     await showMedicalHistory({ key: item.medical_history.id, text: item.medical_history.name }, false)
     const umh = await UserMedicalHistory.getUserMedicalHistory(item.id)
+    const exCaSel = umh.data.filter(el => el.type === 'externalCauses')
+    const appPur = umh.data.filter(el => el.type === 'appointmentPurposes')
+    const func = el => ({ ...JSON.parse(el) })
     setDate(moment(item.date))
     setHour(moment(item.date))
     setItemsValue([...umh.data.filter(el => el.type === 'itemValue').map(el => ({ ...el, focus: false }))])
     setDiagnosesCategories([...umh.data.filter(el => el.type === 'diagnosesCategories').map(el => ({ ...JSON.parse(el.value.split("'").join('"')) }))])
+    setSpecialistsListSelected([...umh.data.filter(el => el.type === 'specialists').map(func)])
+    setDiagnosticAidsListSelected([...umh.data.filter(el => el.type === 'diagnosticAids').map(func)])
+    medicinesListSelected([...umh.data.filter(el => el.type === 'medicines').map(func)])
+    setExternalCauseSelected({ key: exCaSel.key, text: exCaSel.text })
+    setAppointmentPurposeSelected({ key: appPur.key, text: appPur.text })
   }
 
   return (
@@ -390,18 +553,49 @@ export const ClinicalHistory = () => {
                       titles={titles}
                       diagnosesList={diagnosesList}
                       categoriesList={categoriesList}
+                      appointmentPurposesList={appointmentPurposesList}
+                      diagnosticAidsList={diagnosticAidsList}
+                      externalCausesList={externalCausesList}
+                      medicinesList={medicinesList}
+                      presentationsList={presentationsList}
+                      specialistsList={specialistsList}
                       diagnosesCategories={diagnosesCategories}
                       diagnoseSelected={diagnoseSelected}
                       categorySelected={categorySelected}
+                      specialistSelected={specialistSelected}
+                      diagnosticAidSelected={diagnosticAidSelected}
+                      medicineSelected={medicineSelected}
+                      presentationSelected={presentationSelected}
+                      specialistsListSelected={specialistsListSelected}
+                      diagnosticAidsListSelected={diagnosticAidsListSelected}
+                      medicinesListSelected={medicinesListSelected}
+                      medicineObservation={medicineObservation}
+                      medicineQuantity={medicineQuantity}
+                      appointmentPurposeSelected={appointmentPurposeSelected}
+                      externalCauseSelected={externalCauseSelected}
                       itemsValue={itemsValue}
                       canEdit={canEdit}
                       changeValueItem={handleChangeValueItem}
                       handleChangeDiagnoses={(event) => selectDiagnose(event.target.value)}
                       handleChangeCategories={(event) => selectCategory(event.target.value)}
+                      handleChangeSpecialists={(value) => selectSpecialist(value)}
+                      handleChangeDiagnosticAids={(value) => selectDiagnosticAid(value)}
+                      handleChangeMedicines={(value) => selectMedicine(value)}
+                      handleChangePresentations={(event) => selectPresentation(event.target.value)}
+                      handleChangeAppointmentPurposes={(event) => selectAppointmentPurpose(event.target.value)}
+                      handleChangeCauses={(event) => selectExternalCause(event.target.value)}
                       handleChangeDate={(event) => setDate(event.target.value)}
                       handleChangeHour={(event) => setHour(event.target.value)}
+                      handleChangeQuantity={(event) => changeQuantity(event.target.value)}
+                      handleChangeObservation={(event) => changeObservation(event.target.value)}
                       addDiagnoseCategory={() => addDiagnoseCategory()}
                       deleteDiagnoseCategory={(key) => deleteDiagnoseCategory(key)}
+                      addSpecialistToList={() => addSpecialist()}
+                      removeSpecialistFromList={(specialist) => removeSpecialist(specialist)}
+                      removeDiagnosticAidFromList={(diagnosticAid) => removeDiagnosticAid(diagnosticAid)}
+                      removeMedicineFromList={(medicine) => removeMedicine(medicine)}
+                      addDiagnosticAidToList={() => addDiagnosticAid()}
+                      addMedicineToList={() => addMedicine()}
                       onClickBtnSave={handleSaveData}
                     ></FormUserMedicalHistory>
                   )
