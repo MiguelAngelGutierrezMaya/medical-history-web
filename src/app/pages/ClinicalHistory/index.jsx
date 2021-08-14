@@ -535,7 +535,7 @@ export const ClinicalHistory = () => {
           direction="row"
           alignItems="flex-start"
         >
-          <Grid className={classes.spacing} item lg={5} md={5} sm={12} xs={12}>
+          <Grid className={classes.spacing} item lg={5} md={4} sm={12} xs={12}>
             <PatientInfo
               user={userObj}
               profile={profilerObj}
@@ -544,7 +544,7 @@ export const ClinicalHistory = () => {
               cities={cities}
             ></PatientInfo>
           </Grid>
-          <Grid className={classes.spacing} item lg={7} md={7} sm={12} xs={12}>
+          <Grid className={classes.spacing} item lg={7} md={8} sm={12} xs={12}>
             <Grid
               container
               direction="row"

@@ -65,6 +65,20 @@ export const useStyles = makeStyles((theme) => ({
   customSelectIcon: {
     color: Color.purpleLight,
   },
+  customTabs: {
+    [theme.breakpoints.up('xs')]: {
+      width: '300px',
+    },
+    [theme.breakpoints.up('sm')]: {
+      width: '500px',
+    },
+    [theme.breakpoints.up('md')]: {
+      width: '430px',
+    },
+    [theme.breakpoints.up('lg')]: {
+      width: '450px',
+    },
+  },
   label: {
     color: Color.blueDark,
     fontWeight: 500,

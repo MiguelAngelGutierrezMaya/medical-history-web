@@ -619,7 +619,7 @@ export const FormUserMedicalHistory = (
         handleChangeHour={handleChangeHour}
         onClickBtnSave={onClickBtnSave}
       ></HeaderUserMedicalHistory>
-      <Grid item xs={12} sm={12} md={12} lg={12} style={{ width: '100%' }}>
+      <Grid item xs={12} sm={12} md={12} lg={12} className={classes.customTabs}>
         <CustomTabs titles={titles} contents={getContent()} variant={'scrollable'}></CustomTabs>
       </Grid>
     </Grid>
