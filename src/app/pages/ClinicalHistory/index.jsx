@@ -423,24 +423,18 @@ export const ClinicalHistory = () => {
     setDiagnoseSelected({})
     setCategorySelected({})
 
-    setSpecialistsList([])
     setSpecialistsListSelected([])
     setSpecialistSelected({})
 
-    setDiagnosticAidsList([])
     setDiagnosticAidsListSelected([])
     setDiagnosticAidSelected({})
 
-    setMedicinesList([])
     setMedicinesListSelected([])
     setMedicineSelected({})
     setMedicineObservation('')
     setMedicineQuantity(0)
-    setPresentationsList([])
     setPresentationSelected({})
 
-    setAppointmentPurposesList([])
-    setExternalCausesList([])
     setAppointmentPurposeSelected({})
     setExternalCauseSelected({})
 
