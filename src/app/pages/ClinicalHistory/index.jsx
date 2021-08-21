@@ -118,14 +118,14 @@ export const ClinicalHistory = () => {
   // Handlers
   //
 
-  const selectDiagnose = (key) => setDiagnoseSelected({ ...diagnosesList.find(el => el.key === key) })
-  const selectCategory = (key) => setCategorySelected({ ...categoriesList.find(el => el.key === key) })
+  const selectDiagnose = (value) => setDiagnoseSelected({ ...value })
+  const selectCategory = (value) => setCategorySelected({ ...value })
   const selectSpecialist = (value) => setSpecialistSelected({ ...value })
   const selectDiagnosticAid = (value) => setDiagnosticAidSelected({ ...value })
   const selectMedicine = (value) => setMedicineSelected({ ...value })
-  const selectPresentation = (key) => setPresentationSelected({ ...presentationsList.find(el => el.key === key) })
-  const selectAppointmentPurpose = (key) => setAppointmentPurposeSelected({ ...appointmentPurposesList.find(el => el.key === key) })
-  const selectExternalCause = (key) => setExternalCauseSelected({ ...externalCausesList.find(el => el.key === key) })
+  const selectPresentation = (value) => setPresentationSelected({ ...value })
+  const selectAppointmentPurpose = (value) => setAppointmentPurposeSelected({ ...value })
+  const selectExternalCause = (value) => setExternalCauseSelected({ ...value })
   const changeObservation = (value) => setMedicineObservation(value)
   const changeQuantity = (value) => setMedicineQuantity(value)
 
@@ -592,14 +592,14 @@ export const ClinicalHistory = () => {
                       itemsValue={itemsValue}
                       canEdit={canEdit}
                       changeValueItem={handleChangeValueItem}
-                      handleChangeDiagnoses={(event) => selectDiagnose(event.target.value)}
-                      handleChangeCategories={(event) => selectCategory(event.target.value)}
+                      handleChangeDiagnoses={(value) => selectDiagnose(value)}
+                      handleChangeCategories={(value) => selectCategory(value)}
                       handleChangeSpecialists={(value) => selectSpecialist(value)}
                       handleChangeDiagnosticAids={(value) => selectDiagnosticAid(value)}
                       handleChangeMedicines={(value) => selectMedicine(value)}
-                      handleChangePresentations={(event) => selectPresentation(event.target.value)}
-                      handleChangeAppointmentPurposes={(event) => selectAppointmentPurpose(event.target.value)}
-                      handleChangeCauses={(event) => selectExternalCause(event.target.value)}
+                      handleChangePresentations={(value) => selectPresentation(value)}
+                      handleChangeAppointmentPurposes={(value) => selectAppointmentPurpose(value)}
+                      handleChangeCauses={(value) => selectExternalCause(value)}
                       handleChangeDate={(event) => setDate(event.target.value)}
                       handleChangeHour={(event) => setHour(event.target.value)}
                       handleChangeQuantity={(event) => changeQuantity(event.target.value)}

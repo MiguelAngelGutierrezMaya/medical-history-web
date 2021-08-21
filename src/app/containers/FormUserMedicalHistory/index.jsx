@@ -200,21 +200,18 @@ export const FormUserMedicalHistory = (
         lg={5}
         className={classes.containers}
       >
-        <SelectField
-          classNameLabel={classes.customLabel}
-          classNameSelect={classes.customSelect}
-          label="DIAGNOSTICOS"
-          type="text"
-          name="diagnoses"
-          value={diagnoseSelected.text ? diagnoseSelected.text : ''}
+        <AutocompleteField
+          props={
+            {
+              options: diagnosesList,
+              getOptionLabel: (option) => option && option.text ? option.text : ''
+            }
+          }
           disabled={!canEdit}
-          classNameIcon={classes.customSelectIcon}
-          onChange={handleChangeDiagnoses}
-          options={diagnosesList}
-        />
-        {
-          diagnoseSelected.text
-        }
+          value={diagnoseSelected}
+          setValueItem={handleChangeDiagnoses}
+          label={'DIAGNOSTICOS'}
+        ></AutocompleteField>
       </Grid>
       <Grid
         item
@@ -224,21 +221,18 @@ export const FormUserMedicalHistory = (
         lg={5}
         className={classes.containers}
       >
-        <SelectField
-          classNameLabel={classes.customLabel}
-          classNameSelect={classes.customSelect}
-          label="CATEGORIAS"
-          type="text"
-          name="categories"
-          value={categorySelected.text ? categorySelected.text : ''}
-          classNameIcon={classes.customSelectIcon}
+        <AutocompleteField
+          props={
+            {
+              options: categoriesList,
+              getOptionLabel: (option) => option && option.text ? option.text : ''
+            }
+          }
           disabled={!canEdit}
-          onChange={handleChangeCategories}
-          options={categoriesList}
-        />
-        {
-          categorySelected.text
-        }
+          value={categorySelected}
+          setValueItem={handleChangeCategories}
+          label={'CATEGORIAS'}
+        ></AutocompleteField>
       </Grid>
       <Grid
         item
@@ -310,21 +304,18 @@ export const FormUserMedicalHistory = (
         lg={6}
         className={classes.containers}
       >
-        <SelectField
-          classNameLabel={classes.customLabel}
-          classNameSelect={classes.customSelect}
-          label="FINALIDAD CONSULTA EXTERNA"
-          type="text"
-          name="diagnoses"
-          value={appointmentPurposeSelected.text ? appointmentPurposeSelected.text : ''}
+        <AutocompleteField
+          props={
+            {
+              options: appointmentPurposesList,
+              getOptionLabel: (option) => option && option.text ? option.text : ''
+            }
+          }
           disabled={!canEdit}
-          classNameIcon={classes.customSelectIcon}
-          onChange={handleChangeAppointmentPurposes}
-          options={appointmentPurposesList}
-        />
-        {
-          appointmentPurposeSelected.text
-        }
+          value={appointmentPurposeSelected}
+          setValueItem={handleChangeAppointmentPurposes}
+          label={'FINALIDAD CONSULTA EXTERNA'}
+        ></AutocompleteField>
       </Grid>
       <Grid
         item
@@ -334,21 +325,18 @@ export const FormUserMedicalHistory = (
         lg={6}
         className={classes.containers}
       >
-        <SelectField
-          classNameLabel={classes.customLabel}
-          classNameSelect={classes.customSelect}
-          label="CAUSA EXTERNA"
-          type="text"
-          name="categories"
-          value={externalCauseSelected.text ? externalCauseSelected.text : ''}
-          classNameIcon={classes.customSelectIcon}
+        <AutocompleteField
+          props={
+            {
+              options: externalCausesList,
+              getOptionLabel: (option) => option && option.text ? option.text : ''
+            }
+          }
           disabled={!canEdit}
-          onChange={handleChangeCauses}
-          options={externalCausesList}
-        />
-        {
-          externalCauseSelected.text
-        }
+          value={externalCauseSelected}
+          setValueItem={handleChangeCauses}
+          label={'CAUSA EXTERNA'}
+        ></AutocompleteField>
       </Grid>
     </Grid>
   )
@@ -519,21 +507,18 @@ export const FormUserMedicalHistory = (
         lg={4}
         className={classes.containers}
       >
-        <SelectField
-          classNameLabel={classes.customLabel}
-          classNameSelect={classes.customSelect}
-          label="Presentación"
-          type="text"
-          name="diagnoses"
-          value={presentationSelected.text ? presentationSelected.text : ''}
+        <AutocompleteField
+          props={
+            {
+              options: presentationsList,
+              getOptionLabel: (option) => option && option.text ? option.text : ''
+            }
+          }
           disabled={!canEdit}
-          classNameIcon={classes.customSelectIcon}
-          onChange={handleChangePresentations}
-          options={presentationsList}
-        />
-        {
-          presentationSelected.text
-        }
+          value={presentationSelected}
+          setValueItem={handleChangePresentations}
+          label={'Presentación'}
+        ></AutocompleteField>
       </Grid>
       <Grid
         item
