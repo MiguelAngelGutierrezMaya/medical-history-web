@@ -94,7 +94,8 @@ export const useStyles = makeStyles((theme) => ({
     justifyContent: 'flex-end'
   },
   items: {
-    marginTop: '20px'
+    // marginTop: '20px',
+    wordWrap: 'break-word'
   },
   fab: {
     margin: '0px 0px 0px 20px',

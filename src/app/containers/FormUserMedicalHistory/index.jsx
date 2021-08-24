@@ -578,6 +578,7 @@ export const FormUserMedicalHistory = (
                   }}
                   disabled={!canEdit}
                   onDelete={(item) => removeMedicineFromList(item)}
+                  classes={classes.items}
                 />
               ))
             }
