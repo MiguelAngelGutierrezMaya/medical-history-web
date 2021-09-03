@@ -13,6 +13,9 @@ export const Router = {
   appSchedule: '/dashboard/schedule',
   appClinicalHistories: '/dashboard/clinical-histories',
   appAssignAppointment: '/dashboard/assign-appointment',
+  appReportUserClinicalHistories: '/dashboard/report-user-clinical-histories',
+  appReportAppointments: '/dashboard/report-appointments',
+  appReportPatients: '/dashboard/report-users',
 
   // API URI
   apiUrlBase: process.env.REACT_APP_API_URL,
@@ -59,4 +62,7 @@ export const Router = {
   apiAppointments: '/api/schedules/',
   apiAppointmentPurposes: '/api/appointment-purposes/',
   apiReschedule: '/api/reschedule/',
+  apiReportUserClinicalHistories: '/api/report-user-clinical-histories',
+  apiReportAppointments: '/api/report-appointments',
+  apiReportPatients: '/api/report-users',
 }

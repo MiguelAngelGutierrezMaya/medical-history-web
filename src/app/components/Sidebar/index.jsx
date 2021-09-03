@@ -1,3 +1,9 @@
+import { useDispatch, useSelector } from 'react-redux'
+import { NavLink } from 'react-router-dom'
+import { forwardRef, useState } from 'react'
+
+// Components
+
 import {
   Divider,
   Drawer,
@@ -9,11 +15,13 @@ import {
   SvgIcon,
   Typography,
   useTheme,
+  Collapse
 } from '@material-ui/core'
-import { useDispatch, useSelector } from 'react-redux'
-import { NavLink } from 'react-router-dom'
-import { forwardRef } from 'react'
-import { AssignmentInd, Event, FindInPage, Settings, Description } from '@material-ui/icons'
+import { AssignmentInd, Event, FindInPage, Settings, Description, ExpandLess, ExpandMore } from '@material-ui/icons'
+import AssessmentIcon from '@material-ui/icons/Assessment';
+import AssignmentIcon from '@material-ui/icons/Assignment';
+import EventIcon from '@material-ui/icons/Event';
+import PeopleIcon from '@material-ui/icons/People';
 
 // routes
 import { Router } from '../../../routes'
@@ -57,6 +65,27 @@ const options = [
     text: 'Tarjetero índice del paciente',
     route: Router.appIndexCardHolder,
   },
+  {
+    icon: <AssessmentIcon />,
+    text: 'Reportes',
+    subItems: [
+      {
+        icon: <AssignmentIcon />,
+        text: 'Historias Clinicas',
+        route: Router.appReportUserClinicalHistories,
+      },
+      {
+        icon: <EventIcon />,
+        text: 'Citas',
+        route: Router.appReportAppointments,
+      },
+      {
+        icon: <PeopleIcon />,
+        text: 'Pacientes',
+        route: Router.appReportPatients,
+      }
+    ]
+  }
 ]
 
 const LinkBehavior = forwardRef((props, ref) => {
@@ -68,6 +97,12 @@ export const Sidebar = () => {
   const theme = useTheme()
   const dashboard = useSelector(selectDashboard)
   const dispatch = useDispatch()
+
+  const [open, setOpen] = useState(true);
+
+  const handleOpenSubmenu = () => {
+    setOpen(!open);
+  };
 
   return (
     <Drawer
@@ -110,6 +145,36 @@ export const Sidebar = () => {
             ) : (
               <Divider className={classes.divider} key={index} />
             )
+          ) : item.subItems ? (
+            <>
+              <ListItem button onClick={handleOpenSubmenu} key={`item-${index}`}>
+                <ListItemIcon className={classes.iconItem}>
+                  {item.icon}
+                </ListItemIcon>
+                <ListItemText className={classes.textItem} primary={item.text} />
+                {open ? <ExpandLess className={classes.iconItem} /> : <ExpandMore className={classes.iconItem} />}
+              </ListItem>
+              <Collapse in={open} timeout="auto" key={`collapse-${index}`} unmountOnExit>
+                <List component="div" disablePadding>
+                  {
+                    item.subItems.map((subItem, index2) => (
+                      <ListItem
+                        className={classes.item}
+                        button
+                        key={`${index}-${index2}`}
+                        component={LinkBehavior}
+                        to={subItem.route}
+                      >
+                        <ListItemIcon className={classes.iconItem}>
+                          {subItem.icon}
+                        </ListItemIcon>
+                        <ListItemText className={classes.textItem} primary={subItem.text} />
+                      </ListItem>
+                    ))
+                  }
+                </List>
+              </Collapse>
+            </>
           ) : (
             <ListItem
               className={classes.item}

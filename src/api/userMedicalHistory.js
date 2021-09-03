@@ -1,6 +1,7 @@
 import axios from 'axios'
 
 import { Router } from '../routes'
+import { Auth } from '../utils/auth'
 
 export const UserMedicalHistory = {
   list: async (user_id) => {
@@ -35,4 +36,17 @@ export const UserMedicalHistory = {
         return error.response
       })
   },
+  getReportUserMedicalHistory: async ({ document, date_init, date_end }) => {
+    return await axios
+      .get(Router.apiUrlBase + Router.apiReportUserClinicalHistories, {
+        params: { document, date_init, date_end },
+        headers: { Authorization: `Bearer ${Auth.tokenAuth()}` },
+      })
+      .then((response) => {
+        return response
+      })
+      .catch((error) => {
+        return error.response
+      })
+  }
 }

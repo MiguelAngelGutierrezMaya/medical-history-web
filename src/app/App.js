@@ -25,6 +25,9 @@ import { SearchMedicalHistoryConfig } from './pages/SearchMedicalHistoryConfig/i
 import { Schedule } from './pages/Schedule/index.jsx'
 import { ClinicalHistory } from './pages/ClinicalHistory/index.jsx'
 import { AssignAppointment } from './pages/AssignAppointment/index.jsx'
+import { ClinicalHistory as ReportClinicalHistory } from './pages/Reports/ClinicalHistory/index'
+import { Schedule as ReportSchedule } from './pages/Reports/Schedule/index'
+import { Patient as ReportPatient } from './pages/Reports/Patient/index'
 
 const App = () => {
   moment.locale('es')
@@ -84,6 +87,24 @@ const App = () => {
             path={Router.appSchedule}
           >
             <Schedule />
+          </DashboardRoute>
+          <DashboardRoute
+            hasAuthorization={true}
+            path={Router.appReportPatients}
+          >
+            <ReportPatient />
+          </DashboardRoute>
+          <DashboardRoute
+            hasAuthorization={true}
+            path={Router.appReportAppointments}
+          >
+            <ReportSchedule />
+          </DashboardRoute>
+          <DashboardRoute
+            hasAuthorization={true}
+            path={Router.appReportUserClinicalHistories}
+          >
+            <ReportClinicalHistory />
           </DashboardRoute>
           <DashboardRoute
             hasAuthorization={true}

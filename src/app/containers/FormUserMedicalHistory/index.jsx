@@ -1,7 +1,6 @@
 //Components
 import { CustomTabs } from '../../components/CustomTabs'
 import { InputField } from '../../components/InputField'
-import { SelectField } from '../../components/SelectField'
 import { AutocompleteField } from '../../components/AutocompleteField'
 import { ItemDataSelected } from '../../components/ItemDataSelected'
 

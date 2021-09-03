@@ -4,7 +4,7 @@ import { Router } from '../routes'
 import { Auth } from '../utils/auth'
 
 export const Schedule = {
-  userAvailabilities: async ({user_id, date}) => {
+  userAvailabilities: async ({ user_id, date }) => {
     return await axios
       .get(Router.apiUrlBase + Router.apiUserAvailabilities, {
         params: { user_id, date },
@@ -58,6 +58,19 @@ export const Schedule = {
   cancelAppointment: async (data) => {
     return await axios
       .patch(Router.apiUrlBase + Router.apiAppointments, data, {
+        headers: { Authorization: `Bearer ${Auth.tokenAuth()}` },
+      })
+      .then((response) => {
+        return response
+      })
+      .catch((error) => {
+        return error.response
+      })
+  },
+  reportAppointments: async ({ date_init, date_end }) => {
+    return await axios
+      .get(Router.apiUrlBase + Router.apiReportAppointments, {
+        params: { date_init, date_end },
         headers: { Authorization: `Bearer ${Auth.tokenAuth()}` },
       })
       .then((response) => {
