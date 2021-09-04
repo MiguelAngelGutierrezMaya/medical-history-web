@@ -16,7 +16,7 @@ export const User = {
   },
   reportUsers: async ({ document, date_init, date_end }) => {
     return await axios
-      .get(Router.apiUrlBase + Router.apiReportAppointments, {
+      .get(Router.apiUrlBase + Router.apiReportPatients, {
         params: { document, date_init, date_end },
         headers: { Authorization: `Bearer ${Auth.tokenAuth()}` },
       })

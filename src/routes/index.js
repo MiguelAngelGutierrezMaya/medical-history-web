@@ -62,7 +62,7 @@ export const Router = {
   apiAppointments: '/api/schedules/',
   apiAppointmentPurposes: '/api/appointment-purposes/',
   apiReschedule: '/api/reschedule/',
-  apiReportUserClinicalHistories: '/api/report-user-clinical-histories',
-  apiReportAppointments: '/api/report-appointments',
-  apiReportPatients: '/api/report-users',
+  apiReportUserClinicalHistories: '/api/report-user-clinical-histories/',
+  apiReportAppointments: '/api/report-appointments/',
+  apiReportPatients: '/api/report-users/',
 }
