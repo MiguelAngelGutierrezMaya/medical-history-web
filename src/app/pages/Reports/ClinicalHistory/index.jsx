@@ -25,6 +25,9 @@ export const ClinicalHistory = () => {
   //Styles
   const classes = useStyles()
 
+  // 
+  // Control vars
+  // 
   const [typeView, setTypeView] = useState('one')
   const [titles, setTitles] = useState([])
   const [content, setContent] = useState([])
