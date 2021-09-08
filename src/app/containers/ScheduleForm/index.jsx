@@ -38,75 +38,53 @@ export const ScheduleForm = () => {
     description: '',
     btnLabel: '',
   })
+
+  // Control vars
+  const emptyDay = [
+    {
+      startDate: null,
+      endDate: null,
+      hasError1: false,
+      message1: '',
+      hasError2: false,
+      message2: '',
+    },
+  ]
+  const [daysWeek] = useState(['monday', 'tuesday', 'wednesday', 'thursday', 'friday', 'saturday', 'sunday'])
   const [form, setForm] = useState({
     monday: [
       {
-        startDate: null,
-        endDate: null,
-        hasError1: false,
-        message1: '',
-        hasError2: false,
-        message2: '',
+        ...emptyDay
       },
     ],
     tuesday: [
       {
-        startDate: null,
-        endDate: null,
-        hasError1: false,
-        message1: '',
-        hasError2: false,
-        message2: '',
+        ...emptyDay
       },
     ],
     wednesday: [
       {
-        startDate: null,
-        endDate: null,
-        hasError1: false,
-        message1: '',
-        hasError2: false,
-        message2: '',
+        ...emptyDay
       },
     ],
     thursday: [
       {
-        startDate: null,
-        endDate: null,
-        hasError1: false,
-        message1: '',
-        hasError2: false,
-        message2: '',
+        ...emptyDay
       },
     ],
     friday: [
       {
-        startDate: null,
-        endDate: null,
-        hasError1: false,
-        message1: '',
-        hasError2: false,
-        message2: '',
+        emptyDay
       },
     ],
     saturday: [
       {
-        startDate: null,
-        endDate: null,
-        hasError1: false,
-        message1: '',
-        hasError2: false,
-        message2: '',
+        ...emptyDay
       },
     ],
     sunday: [
       {
-        startDate: null,
-        endDate: null,
-        hasError1: false,
-        message1: '',
-        hasError2: false,
-        message2: '',
+        ...emptyDay
       },
     ],
   })
@@ -192,82 +170,18 @@ export const ScheduleForm = () => {
             }
           }
         })
+        const obj = {}
         if (response.data.length > 0) {
+          const days = Object.keys(data)
+          const lostDays = daysWeek.filter(value => !days.includes(value));
+          if (lostDays.length > 0) lostDays.forEach(el => data[el] = [...emptyDay])
           setDuration(response.data[0]?.appointment_duration)
           setForm({ ...data })
         } else {
+          daysWeek.forEach(el => obj[el] = [...emptyDay])
           setDuration(30)
           setForm({
-            monday: [
-              {
-                startDate: null,
-                endDate: null,
-                hasError1: false,
-                message1: '',
-                hasError2: false,
-                message2: '',
-              },
-            ],
-            tuesday: [
-              {
-                startDate: null,
-                endDate: null,
-                hasError1: false,
-                message1: '',
-                hasError2: false,
-                message2: '',
-              },
-            ],
-            wednesday: [
-              {
-                startDate: null,
-                endDate: null,
-                hasError1: false,
-                message1: '',
-                hasError2: false,
-                message2: '',
-              },
-            ],
-            thursday: [
-              {
-                startDate: null,
-                endDate: null,
-                hasError1: false,
-                message1: '',
-                hasError2: false,
-                message2: '',
-              },
-            ],
-            friday: [
-              {
-                startDate: null,
-                endDate: null,
-                hasError1: false,
-                message1: '',
-                hasError2: false,
-                message2: '',
-              },
-            ],
-            saturday: [
-              {
-                startDate: null,
-                endDate: null,
-                hasError1: false,
-                message1: '',
-                hasError2: false,
-                message2: '',
-              },
-            ],
-            sunday: [
-              {
-                startDate: null,
-                endDate: null,
-                hasError1: false,
-                message1: '',
-                hasError2: false,
-                message2: '',
-              },
-            ],
+            ...obj
           })
         }
       }
@@ -469,6 +383,8 @@ export const ScheduleForm = () => {
       list = list.concat(getAvailabilities('friday', 5, selectedDate))
       list = list.concat(getAvailabilities('saturday', 6, selectedDate))
 
+      console.log(list)
+
       Schedule.addAvailabilities(list).then((response) => {
         if (response?.status === 204) {
           setPopupMessage({
@@ -557,6 +473,12 @@ export const ScheduleForm = () => {
           <Typography className={classes.titleWeek}>{day}</Typography>
         </Grid>
         {list?.map((item, i) => {
+
+          if (item.startDate && item.endDate) {
+            item.startDate = moment(`${startDay.format('YYYY-MM-DD')} ${item.startDate.format('HH:mm')}`, 'YYYY-MM-DD HH:mm')
+            item.endDate = moment(`${startDay.format('YYYY-MM-DD')} ${item.endDate.format('HH:mm')}`, 'YYYY-MM-DD HH:mm')
+          }
+
           if (item?.action !== 'delete')
             return (
               <Grid container spacing={4} key={i}>
@@ -700,13 +622,13 @@ export const ScheduleForm = () => {
                   />
                 </Grid>
               </Grid>
-              {item('Lunes', moment(selectedDate || new Date()).day(1), form.monday, 'monday')}
-              {item('Martes', moment(selectedDate || new Date()).day(2), form.tuesday, 'tuesday')}
-              {item('Miércoles', moment(selectedDate || new Date()).day(3), form.wednesday, 'wednesday')}
-              {item('Jueves', moment(selectedDate || new Date()).day(4), form.thursday, 'thursday')}
-              {item('Viernes', moment(selectedDate || new Date()).day(5), form.friday, 'friday')}
-              {item('Sábado', moment(selectedDate || new Date()).day(6), form.saturday, 'saturday')}
-              {item('Domingo', moment(selectedDate || new Date()).day(0), form.sunday, 'sunday')}
+              {item('Domingo', moment(selectedDate).day(0), form.sunday, 'sunday')}
+              {item('Lunes', moment(selectedDate).day(1), form.monday, 'monday')}
+              {item('Martes', moment(selectedDate).day(2), form.tuesday, 'tuesday')}
+              {item('Miércoles', moment(selectedDate).day(3), form.wednesday, 'wednesday')}
+              {item('Jueves', moment(selectedDate).day(4), form.thursday, 'thursday')}
+              {item('Viernes', moment(selectedDate).day(5), form.friday, 'friday')}
+              {item('Sábado', moment(selectedDate).day(6), form.saturday, 'saturday')}
             </Grid>
             <Button
               className={classes.btn}
