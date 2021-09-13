@@ -98,7 +98,7 @@ export const Sidebar = () => {
   const dashboard = useSelector(selectDashboard)
   const dispatch = useDispatch()
 
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
 
   const handleOpenSubmenu = () => {
     setOpen(!open);

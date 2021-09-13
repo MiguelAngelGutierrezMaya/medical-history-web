@@ -57,8 +57,7 @@ export const Patient = () => {
   // 
   // Control vars
   // 
-  const [typeView, setTypeView] = useState('one')
-  const [form, setForm] = useState({
+  const defaultForm = {
     // Data find
     date_init: null,
     date_end: null,
@@ -108,7 +107,11 @@ export const Patient = () => {
     transferDate: '',
     dateLastAttention: '',
     userAlert: '',
-    userMessageHc: '',
+    userMessageHc: ''
+  }
+  const [typeView, setTypeView] = useState('one')
+  const [form, setForm] = useState({
+    ...defaultForm
   })
   const [error] = useState({
     nuip: { hasError: false, message: '' },
@@ -194,7 +197,32 @@ export const Patient = () => {
 
   // 
   // Handlers
-  // 
+  //
+  const resetData = () => {
+    setForm({
+      ...defaultForm,
+      date_init: form.date_init,
+      date_end: form.date_end,
+      nuip: form.nuip,
+    })
+    // setPatients([])
+    setDepartments([])
+    setCities([])
+    setNacionalities([])
+    setCountries([])
+    setUsualOccupations([])
+    setSpecialPopulations([])
+    setSexualOrientations([])
+    setSocialSecuritySchemes([])
+    setEpsList([])
+    setCivilStatusList([])
+    setScholarshipList([])
+    setEthnicGroupList([])
+    setTypeDegreeDisabilityList([])
+    setRelationshipPersonInChargeList([])
+    setHcOpenPlaceList([])
+    setHcTransferToList([])
+  }
   const handleOpen = (type, title, description, btnLabel) => setPopupMessage({
     open: true,
     btnLabel,
@@ -274,8 +302,13 @@ export const Patient = () => {
     })
   }
 
+  const closeIndexTarget = () => {
+    handleChangeView('one')
+    resetData()
+  }
+
   const searchData = async () => {
-    if (!form.date_init) return handleOpen('error', 'Error', 'La fecha de inicio es obligatoria', 'Cerrar alerta')
+    // if (!form.date_init) return handleOpen('error', 'Error', 'La fecha de inicio es obligatoria', 'Cerrar alerta')
     handleChangeView('one')
     await User.reportUsers({
       document: form.nuip ? form.nuip : null,
@@ -283,13 +316,14 @@ export const Patient = () => {
       date_end: form.date_end ? moment(form.date_end).format('YYYY-MM-DDT23:59:59') : null
     }).then((response) => {
       if (response?.status === 200) {
+        if (response.data?.length <= 0) return handleOpen('info', 'Sin coincidencias', 'No se encontraron registros', 'Cerrar alerta')
         setPatients(
           response.data?.map((item) => ({
             id: item.id,
-            date: moment(item.profile.created, 'YYYY-MM-DD').format('L'),
+            date: moment(item.profile?.created, 'YYYY-MM-DD').format('L'),
             names: `${item.first_name} ${item.second_name}`,
             last_names: `${item.surname} ${item.second_surname}`,
-            documents: item.profile.nuip,
+            documents: item.profile?.nuip,
             index_target: (
               <Fab color="primary" aria-label="description" onClick={() => showIndexTarget(item)}>
                 <DescriptionIcon />
@@ -561,7 +595,7 @@ export const Patient = () => {
           <HeaderBasic
             type={typeView}
             onClick={() => null}
-            onReturn={() => handleChangeView('one')}
+            onReturn={() => closeIndexTarget()}
             subtitle={'Seleccionar tipo de Historia Clinica'}
           ></HeaderBasic>
           <CustomTabs titles={titles} contents={contents} />
