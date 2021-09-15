@@ -43,6 +43,7 @@ export const Schedule = () => {
       date_end: form.date_end ? moment(form.date_end).format('YYYY-MM-DDT23:59:59') : null
     }).then((response) => {
       if (response?.status === 200) {
+        if (response.data?.length <= 0) return handleOpen('info', 'Sin coincidencias', 'No se encontraron registros', 'Cerrar alerta')
         setUserAppointments(
           response.data?.map((item) => ({
             id: item.id,

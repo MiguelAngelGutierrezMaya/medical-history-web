@@ -159,6 +159,7 @@ export const ClinicalHistory = () => {
         : null,
     }).then((response) => {
       if (response?.status === 200) {
+        if (response.data?.length <= 0) return handleOpen('info', 'Sin coincidencias', 'No se encontraron registros', 'Cerrar alerta')
         setUserMedicalHistories(
           response.data?.map((item) => ({
             id: item.id,
