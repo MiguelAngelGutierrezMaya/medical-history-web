@@ -2,7 +2,6 @@
 import { CustomTabs } from '../../components/CustomTabs'
 import { InputField } from '../../components/InputField'
 import { AutocompleteField } from '../../components/AutocompleteField'
-import { ItemDataSelected } from '../../components/ItemDataSelected'
 
 import {
   Button,
@@ -11,7 +10,7 @@ import {
   Grid,
   RadioGroup,
   Typography,
-  List
+  // List
 } from '@material-ui/core'
 
 //Icons
@@ -20,6 +19,7 @@ import AddIcon from '@material-ui/icons/Add'
 
 //Containers
 import { HeaderUserMedicalHistory } from '../../containers/HeaderUserMedicalHistory'
+import { FormRemission } from '../../containers/FormRemission'
 
 //Providers
 import { WidthProvider, Responsive } from 'react-grid-layout'
@@ -32,13 +32,13 @@ const ResponsiveReactGridLayout = WidthProvider(Responsive)
 
 export const FormUserMedicalHistory = (
   {
+    userObj,
+    profilerObj,
     hcData,
     date,
     hour,
     content,
     titles,
-    itemsValue,
-    canEdit,
     diagnosesList,
     categoriesList,
     appointmentPurposesList,
@@ -47,42 +47,67 @@ export const FormUserMedicalHistory = (
     medicinesList,
     presentationsList,
     specialistsList,
-    specialistSelected,
-    diagnosticAidSelected,
-    medicineSelected,
-    medicineObservation,
-    medicineQuantity,
-    presentationSelected,
+    lendingList,
+    examList,
+    diagnosesCategories,
     diagnoseSelected,
     categorySelected,
-    appointmentPurposeSelected,
-    externalCauseSelected,
-    diagnosesCategories,
-    handleChangeDate,
-    handleChangeHour,
-    handleChangeDiagnoses,
-    handleChangeCategories,
-    handleChangeSpecialists,
-    handleChangeDiagnosticAids,
-    handleChangeMedicines,
-    handleChangePresentations,
-    handleChangeAppointmentPurposes,
-    handleChangeCauses,
-    addSpecialistToList,
-    removeSpecialistFromList,
-    addDiagnosticAidToList,
-    removeDiagnosticAidFromList,
-    addMedicineToList,
-    removeMedicineFromList,
+    specialistSelected,
+    lendingSpecialistSelected,
+    diagnosticAidSelected,
+    lendingDiagnosticAidSelected,
+    examSelected,
+    medicineSelected,
+    lendingExamSelected,
+    presentationSelected,
     specialistsListSelected,
     diagnosticAidsListSelected,
     medicinesListSelected,
-    onClickBtnSave,
+    medicineObservation,
+    medicineQuantity,
+    examsListSelected,
+    appointmentPurposeSelected,
+    externalCauseSelected,
+    itemsValue,
+    canEdit,
+    changeValueItem,
+    handleChangeDiagnoses,
+    handleChangeCategories,
+    handleChangeSpecialists,
+    handleChangeLendingSpecialists,
+    handleChangeDiagnosticAids,
+    handleChangeLendingDiagnosticAid,
+    handleChangeMedicines,
+    handleChangeExam,
+    handleChangeLendingExam,
+    handleChangePresentations,
+    handleChangeAppointmentPurposes,
+    handleChangeCauses,
+    handleChangeDate,
+    handleChangeHour,
+    handleChangeQuantity,
+    handleChangeQuantityDiagnosticAid,
+    handleChangeQuantityExam,
+    handleChangeObservation,
+    handleChangeObservationSpecialist,
+    handleChangeObservationDiagnosticAid,
+    handleChangeObservationExam,
     addDiagnoseCategory,
     deleteDiagnoseCategory,
-    changeValueItem,
-    handleChangeQuantity,
-    handleChangeObservation
+    addSpecialistToList,
+    removeSpecialistFromList,
+    removeDiagnosticAidFromList,
+    removeMedicineFromList,
+    removeExamFromList,
+    addDiagnosticAidToList,
+    addExamToList,
+    addMedicineToList,
+    onClickBtnSave,
+    specialistsObservation,
+    diagnosticAidObservation,
+    examObservation,
+    diagnosticAidQuantity,
+    examQuantity
   }) => {
   const classes = useStyles()
 
@@ -342,248 +367,105 @@ export const FormUserMedicalHistory = (
 
   const referralsView = () => (
     <Grid container>
-      <Grid
-        item
-        xs={10}
-        sm={10}
-        md={8}
-        lg={8}
-        className={classes.containers}
-      >
-        <AutocompleteField
-          props={
-            {
-              options: specialistsList,
-              getOptionLabel: (option) => option && option.text ? option.text : ''
-            }
-          }
-          disabled={!canEdit}
-          value={specialistSelected}
-          setValueItem={(item) => handleChangeSpecialists(item)}
-          label={'Especialistas'}
-        ></AutocompleteField>
-      </Grid>
-      <Grid
-        item
-        xs={2}
-        sm={2}
-        md={4}
-        lg={4}
-        className={classes.buttonContainers}
-      >
-        <Button variant="contained" color="primary" onClick={addSpecialistToList} disabled={!canEdit}>
-          Añadir
-        </Button>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={12}
-        lg={12}
-        className={classes.containers}
-      >
-        <div className={classes.listItems}>
-          <List dense={false}>
-            {
-              specialistsListSelected.map(el => (
-                <ItemDataSelected
-                  key={`specialist-selected-${el.key}`}
-                  item={el}
-                  disabled={!canEdit}
-                  onDelete={(item) => removeSpecialistFromList(item)}
-                />
-              ))
-            }
-          </List>
-        </div>
-      </Grid>
-      <Grid
-        item
-        xs={10}
-        sm={10}
-        md={8}
-        lg={8}
-        className={classes.containers}
-      >
-        <AutocompleteField
-          props={
-            {
-              options: diagnosticAidsList,
-              getOptionLabel: (option) => option && option.text ? option.text : ''
-            }
-          }
-          disabled={!canEdit}
-          value={diagnosticAidSelected}
-          setValueItem={(item) => handleChangeDiagnosticAids(item)}
-          label={'Ayudas diagnosticas'}
-        ></AutocompleteField>
-      </Grid>
-      <Grid
-        item
-        xs={2}
-        sm={2}
-        md={4}
-        lg={4}
-        className={classes.buttonContainers}
-      >
-        <Button variant="contained" color="primary" onClick={addDiagnosticAidToList} disabled={!canEdit}>
-          Añadir
-        </Button>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={12}
-        lg={12}
-        className={classes.containers}
-      >
-        <div className={classes.listItems}>
-          <List dense={false}>
-            {
-              diagnosticAidsListSelected.map(el => (
-                <ItemDataSelected
-                  key={`diagnostic-aid-selected-${el.key}`}
-                  item={el}
-                  disabled={!canEdit}
-                  onDelete={(item) => removeDiagnosticAidFromList(item)}
-                />
-              ))
-            }
-          </List>
-        </div>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={6}
-        lg={6}
-        className={classes.containers}
-      >
-        <AutocompleteField
-          props={
-            {
-              options: medicinesList,
-              getOptionLabel: (option) => option && option.text ? option.text : ''
-            }
-          }
-          disabled={!canEdit}
-          value={medicineSelected}
-          setValueItem={(item) => handleChangeMedicines(item)}
-          label={'Medicamentos'}
-        ></AutocompleteField>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={6}
-        lg={6}
-        className={classes.containers}
-      >
-        <InputField
-          autoFocus={false}
-          className={classes.customInput}
-          label={'Cantidad'}
-          type="number"
-          name="cantidad"
-          inputProps={
-            {
-              disabled: !canEdit,
-              onChange: (event) => handleChangeQuantity(event),
-              value: medicineQuantity
-            }
-          }
-        />
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={4}
-        lg={4}
-        className={classes.containers}
-      >
-        <AutocompleteField
-          props={
-            {
-              options: presentationsList,
-              getOptionLabel: (option) => option && option.text ? option.text : ''
-            }
-          }
-          disabled={!canEdit}
-          value={presentationSelected}
-          setValueItem={handleChangePresentations}
-          label={'Presentación'}
-        ></AutocompleteField>
-      </Grid>
-      <Grid
-        item
-        xs={6}
-        sm={6}
-        md={4}
-        lg={4}
-        className={classes.containers}
-      >
-        <InputField
-          autoFocus={false}
-          inputProps={
-            {
-              disabled: !canEdit,
-              onChange: (event) => handleChangeObservation(event),
-              value: medicineObservation
-            }
-          }
-          className={classes.customInput}
-          label={'Observaciones'}
-          type="text"
-          name="label"
-          multiline={true}
-          rows={1}
-          rowsMax={1}
-        />
-      </Grid>
-      <Grid
-        item
-        xs={6}
-        sm={6}
-        md={4}
-        lg={4}
-        className={classes.buttonContainers}
-      >
-        <Button variant="contained" color="primary" onClick={addMedicineToList} disabled={!canEdit}>
-          Añadir
-        </Button>
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        sm={12}
-        md={12}
-        lg={12}
-        className={classes.containers}
-      >
-        <div className={classes.listItems}>
-          <List dense={false}>
-            {
-              medicinesListSelected.map(el => (
-                <ItemDataSelected
-                  key={`medicine-selected-${el.key}`}
-                  item={{
-                    ...el,
-                    text: `${el.text} / ${el.medicineQuantity || 0} / ${el.presentationSelected || ''} / ${el.medicineObservation || ''}`
-                  }}
-                  disabled={!canEdit}
-                  onDelete={(item) => removeMedicineFromList(item)}
-                  classes={classes.items}
-                />
-              ))
-            }
-          </List>
-        </div>
-      </Grid>
+
+      <FormRemission
+        userObj={userObj}
+        profilerObj={profilerObj}
+        includeQuantity={false}
+        headers={['Especialista', 'Prestador', 'Observaciones']}
+        title={'ESPECIALISTAS'}
+        canEdit={canEdit}
+        list={specialistsList}
+        listSelected={specialistSelected}
+        handleChangeList={(item) => handleChangeSpecialists(item)}
+        helperText={'Buscar especialista'}
+        handleChangeQuantity={null}
+        medicineQuantity={0}
+        lendingPresentationsList={lendingList}
+        lendingPresentationSelected={lendingSpecialistSelected}
+        lendingPresentationLabel={'Prestador'}
+        handleChangeLendingsPresentations={(item) => handleChangeLendingSpecialists(item)}
+        observation={specialistsObservation}
+        handleChangeObservation={(event) => handleChangeObservationSpecialist(event)}
+        addDataToList={addSpecialistToList}
+        listKey={'specialist-selected-'}
+        listDataSelected={specialistsListSelected}
+        removeFromList={(item) => removeSpecialistFromList(item)}
+      ></FormRemission>
+      <FormRemission
+        userObj={userObj}
+        profilerObj={profilerObj}
+        includeQuantity={true}
+        headers={['Ayuda diagnóstica', 'Cantidad', 'Prestador', 'Observaciones']}
+        title={'AYUDAS DIAGNOSTICAS'}
+        canEdit={canEdit}
+        list={diagnosticAidsList}
+        listSelected={diagnosticAidSelected}
+        handleChangeList={(item) => handleChangeDiagnosticAids(item)}
+        helperText={'Buscar ayuda diagnostica'}
+        handleChangeQuantity={(event) => handleChangeQuantityDiagnosticAid(event)}
+        quantity={diagnosticAidQuantity}
+        lendingPresentationsList={lendingList}
+        lendingPresentationSelected={lendingDiagnosticAidSelected}
+        lendingPresentationLabel={'Prestador'}
+        handleChangeLendingsPresentations={(item) => handleChangeLendingDiagnosticAid(item)}
+        observation={diagnosticAidObservation}
+        handleChangeObservation={(event) => handleChangeObservationDiagnosticAid(event)}
+        addDataToList={addDiagnosticAidToList}
+        listKey={'diagnostic-aid-selected-'}
+        listDataSelected={diagnosticAidsListSelected}
+        removeFromList={(item) => removeDiagnosticAidFromList(item)}
+      ></FormRemission>
+
+      <FormRemission
+        userObj={userObj}
+        profilerObj={profilerObj}
+        includeQuantity={true}
+        headers={['Examen', 'Cantidad', 'Prestador', 'Observaciones']}
+        title={'LABORATORIO'}
+        canEdit={canEdit}
+        list={examList}
+        listSelected={examSelected}
+        handleChangeList={(item) => handleChangeExam(item)}
+        helperText={'Buscar examen'}
+        handleChangeQuantity={(event) => handleChangeQuantityExam(event)}
+        quantity={examQuantity}
+        lendingPresentationsList={lendingList}
+        lendingPresentationSelected={lendingExamSelected}
+        lendingPresentationLabel={'Prestador'}
+        handleChangeLendingsPresentations={(item) => handleChangeLendingExam(item)}
+        observation={examObservation}
+        handleChangeObservation={(event) => handleChangeObservationExam(event)}
+        addDataToList={addExamToList}
+        listKey={'laboratory-'}
+        listDataSelected={examsListSelected}
+        removeFromList={(item) => removeExamFromList(item)}
+      ></FormRemission>
+
+      <FormRemission
+        userObj={userObj}
+        profilerObj={profilerObj}
+        includeQuantity={true}
+        headers={['Medicamento', 'Cantidad', 'Presentación', 'Observaciones']}
+        title={'MEDICAMENTOS'}
+        canEdit={canEdit}
+        list={medicinesList}
+        listSelected={medicineSelected}
+        handleChangeList={(item) => handleChangeMedicines(item)}
+        helperText={'Buscar medicamento'}
+        handleChangeQuantity={(event) => handleChangeQuantity(event)}
+        quantity={medicineQuantity}
+        lendingPresentationsList={presentationsList}
+        lendingPresentationSelected={presentationSelected}
+        lendingPresentationLabel={'Presentación'}
+        handleChangeLendingsPresentations={(item) => handleChangePresentations(item)}
+        observation={medicineObservation}
+        handleChangeObservation={(event) => handleChangeObservation(event)}
+        addDataToList={addMedicineToList}
+        listKey={'medicine-selected-'}
+        listDataSelected={medicinesListSelected}
+        removeFromList={(item) => removeMedicineFromList(item)}
+      ></FormRemission>
     </Grid>
   )
 

@@ -21,9 +21,19 @@ import { MedicalHistory } from '../../../../api/medicalHistory'
 // styles & assets
 import { useStyles } from './style'
 
+// Patient
+import { Patient } from '../../../../api/patient'
+
+// utils
+import { ObjFormat } from '../../../../utils/obj_format'
+
 export const ClinicalHistory = () => {
   //Styles
   const classes = useStyles()
+
+  //DataObj
+  const [userObj, setUserObj] = useState({})
+  const [profilerObj, setProfilerObj] = useState({})
 
   // 
   // Control vars
@@ -50,13 +60,23 @@ export const ClinicalHistory = () => {
   // FormData
   //
   const [specialistsListSelected, setSpecialistsListSelected] = useState([])
+  const [lendingSpecialistsListSelected, setLendingSpecialistsListSelected] = useState([])
   const [specialistSelected, setSpecialistSelected] = useState({})
   const [diagnosticAidsListSelected, setDiagnosticAidsListSelected] = useState([])
   const [diagnosticAidSelected, setDiagnosticAidSelected] = useState({})
+  const [lendingDiagnosticAidSelected, setLendingDiagnosticAidSelected] = useState({})
   const [medicinesListSelected, setMedicinesListSelected] = useState([])
   const [medicineSelected, setMedicineSelected] = useState({})
   const [medicineObservation, setMedicineObservation] = useState('')
+  const [specialistsObservation, setSpecialistsObservation] = useState('')
+  const [diagnosticAidObservation, setDiagnosticAidObservation] = useState('')
+  const [examObservation, setExamObservation] = useState('')
   const [medicineQuantity, setMedicineQuantity] = useState(0)
+  const [diagnosticAidQuantity, setDiagnosticAidQuantity] = useState(0)
+  const [examQuantity, setExamQuantity] = useState(0)
+  const [examsListSelected, setExamsListSelected] = useState([])
+  const [examSelected, setExamSelected] = useState({})
+  const [lendingExamSelected, setLendingExamSelected] = useState({})
   const [presentationSelected, setPresentationSelected] = useState({})
   const [diagnosesCategories, setDiagnosesCategories] = useState([])
   const [diagnoseSelected, setDiagnoseSelected] = useState({})
@@ -66,7 +86,6 @@ export const ClinicalHistory = () => {
   const [date, setDate] = useState(null)
   const [hour, setHour] = useState(null)
   const [itemsValue, setItemsValue] = useState([])
-
 
   //
   // Handlers
@@ -90,16 +109,27 @@ export const ClinicalHistory = () => {
     setCategorySelected({})
 
     setSpecialistsListSelected([])
+    setLendingSpecialistsListSelected([])
     setSpecialistSelected({})
+    setSpecialistsObservation('')
 
     setDiagnosticAidsListSelected([])
+    setLendingDiagnosticAidSelected({})
     setDiagnosticAidSelected({})
+    setDiagnosticAidObservation('')
+    setDiagnosticAidQuantity(0)
 
     setMedicinesListSelected([])
     setMedicineSelected({})
     setMedicineObservation('')
     setMedicineQuantity(0)
     setPresentationSelected({})
+
+    setExamsListSelected([])
+    setExamSelected({})
+    setLendingExamSelected({})
+    setExamObservation('')
+    setExamQuantity(0)
 
     setAppointmentPurposeSelected({})
     setExternalCauseSelected({})
@@ -136,6 +166,7 @@ export const ClinicalHistory = () => {
     setSpecialistsListSelected([...umh.data.filter(el => el.type === 'specialists').map(func)])
     setDiagnosticAidsListSelected([...umh.data.filter(el => el.type === 'diagnosticAids').map(func)])
     setMedicinesListSelected([...umh.data.filter(el => el.type === 'medicines').map(func)])
+    setExamsListSelected([...umh.data.filter(el => el.type === 'exams').map(func)])
     setExternalCauseSelected({ key: exCaSel.key, text: exCaSel.text })
     setAppointmentPurposeSelected({ key: appPur.key, text: appPur.text })
   }
@@ -149,6 +180,32 @@ export const ClinicalHistory = () => {
         'Cerrar alerta',
       )
     handleChangeView('one')
+    var user = {}, profile = {}
+    await Patient.getPatient({ nuip: form.nuip, nuip_type: 2 }).then((response) => {
+      if (response?.status === 200) {
+        user = ObjFormat.camelCase(response.data)
+        profile = ObjFormat.camelCase({
+          ...response.data?.profile,
+          birthday:
+            response.data?.profile?.birthday !== null
+              ? moment(response.data?.profile?.birthday, 'YYYY-MM-DD')
+              : '',
+          transferDate:
+            response.data?.profile?.transfer_date !== null
+              ? moment(response.data?.profile?.transfer_date, 'YYYY-MM-DD')
+              : '',
+          dateLastAttention:
+            response.data?.profile?.date_last_attention !== null
+              ? moment(
+                response.data?.profile?.date_last_attention,
+                'YYYY-MM-DD',
+              )
+              : '',
+        })
+        setUserObj({ ...user })
+        setProfilerObj({ ...profile })
+      }
+    })
     await UserMedicalHistory.getReportUserMedicalHistory({
       document: form.nuip,
       date_init: form.date_init
@@ -213,6 +270,8 @@ export const ClinicalHistory = () => {
             subtitle={'Seleccionar tipo de Historia Clinica'}
           ></HeaderBasic>
           <FormUserMedicalHistory
+            userObj={userObj}
+            profilerObj={profilerObj}
             hcData={hcData}
             date={date}
             hour={hour}
@@ -226,18 +285,30 @@ export const ClinicalHistory = () => {
             medicinesList={[]}
             presentationsList={[]}
             specialistsList={[]}
+            lendingList={[]}
+            examList={[]}
             diagnosesCategories={diagnosesCategories}
             diagnoseSelected={diagnoseSelected}
             categorySelected={categorySelected}
             specialistSelected={specialistSelected}
+            lendingSpecialistsListSelected={lendingSpecialistsListSelected}
             diagnosticAidSelected={diagnosticAidSelected}
+            lendingDiagnosticAidSelected={lendingDiagnosticAidSelected}
             medicineSelected={medicineSelected}
+            examSelected={examSelected}
+            lendingExamSelected={lendingExamSelected}
             presentationSelected={presentationSelected}
             specialistsListSelected={specialistsListSelected}
             diagnosticAidsListSelected={diagnosticAidsListSelected}
             medicinesListSelected={medicinesListSelected}
             medicineObservation={medicineObservation}
             medicineQuantity={medicineQuantity}
+            diagnosticAidQuantity={diagnosticAidQuantity}
+            examQuantity={examQuantity}
+            examsListSelected={examsListSelected}
+            specialistsObservation={specialistsObservation}
+            diagnosticAidObservation={diagnosticAidObservation}
+            examObservation={examObservation}
             appointmentPurposeSelected={appointmentPurposeSelected}
             externalCauseSelected={externalCauseSelected}
             itemsValue={itemsValue}
@@ -263,6 +334,17 @@ export const ClinicalHistory = () => {
             removeMedicineFromList={() => null}
             addDiagnosticAidToList={() => null}
             addMedicineToList={() => null}
+            handleChangeLendingSpecialists={() => null}
+            handleChangeLendingDiagnosticAid={() => null}
+            handleChangeExam={() => null}
+            handleChangeLendingExam={() => null}
+            handleChangeQuantityDiagnosticAid={() => null}
+            handleChangeQuantityExam={() => null}
+            handleChangeObservationSpecialist={() => null}
+            handleChangeObservationDiagnosticAid={() => null}
+            handleChangeObservationExam={() => null}
+            removeExamFromList={() => null}
+            addExamToList={() => null}
             onClickBtnSave={null}
           ></FormUserMedicalHistory>
         </>

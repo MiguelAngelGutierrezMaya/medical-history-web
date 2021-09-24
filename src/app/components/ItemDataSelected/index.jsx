@@ -1,25 +1,40 @@
 import {
-    ListItem,
+    // ListItem,
     ListItemText,
-    ListItemSecondaryAction,
+    // ListItemSecondaryAction,
     IconButton
 } from '@material-ui/core'
 
 //Icons
 import DeleteIcon from '@material-ui/icons/Delete'
 
-export const ItemDataSelected = ({ item, disabled, onDelete }) => {
+export const ItemDataSelected = ({ showAction, showLending, includeQuantity, item, disabled, onDelete }) => {
     return (
-        <ListItem>
-            <ListItemText
-                primary={item.text}
-                secondary={null}
-            />
-            <ListItemSecondaryAction>
-                <IconButton edge="end" aria-label="delete" onClick={() => onDelete(item)} disabled={disabled}>
-                    <DeleteIcon />
-                </IconButton>
-            </ListItemSecondaryAction>
-        </ListItem>
+        <tr>
+            <td>
+                <ListItemText
+                    primary={item.text}
+                    secondary={null}
+                />
+            </td>
+            {
+                includeQuantity ? (<td>{item.quantity}</td>) : (<></>)
+            }
+            {
+                showLending ? (
+                    <td>{item.lendingPresentationSelected?.text || item.lendingPresentationSelected}</td>
+                ) : (<></>)
+            }
+            <td>{item.observation}</td>
+            {
+                showAction ? (
+                    <td>
+                        <IconButton edge="end" aria-label="delete" onClick={() => onDelete(item)} disabled={disabled}>
+                            <DeleteIcon />
+                        </IconButton>
+                    </td>
+                ) : (<></>)
+            }
+        </tr>
     )
 }
