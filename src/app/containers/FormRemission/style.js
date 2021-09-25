@@ -1,5 +1,6 @@
 import { makeStyles } from '@material-ui/core'
 import { Color } from '../../../assets/js/color'
+import { StyleSheet } from '@react-pdf/renderer';
 
 export const useStyles = makeStyles((theme) => ({
     titleContainer: {
@@ -135,3 +136,57 @@ export const useStyles = makeStyles((theme) => ({
         padding: '20px'
     },
 }))
+
+export const styles = StyleSheet.create({
+    page: {
+        // display: 'flex',
+        flexDirection: 'column',
+        backgroundColor: Color.white
+    },
+    image: {
+        width: 145,
+        height: 30,
+        margin: 10
+    },
+    section: {
+        marginLeft: 10,
+        marginRight: 10,
+        padding: 5,
+        // flexGrow: 1,
+    },
+    title: {
+        textAlign: 'center',
+        padding: 5,
+        width: '100%',
+        backgroundColor: Color.dark,
+        color: Color.white,
+        fontSize: 14
+    },
+    subtittle: {
+        padding: 5,
+        backgroundColor: Color.gray,
+        marginBottom: 5,
+        fontSize: 14
+    },
+    container: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+    },
+    subcontainer: {
+        width: '50%',
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 5,
+        marginBottom: 5,
+        padding: 3
+    },
+    textInfo: {
+        fontSize: 12
+    },
+    textBold: {
+        fontWeight: 'ultrabold',
+        fontSize: 12,
+        marginRight: 2
+    }
+});

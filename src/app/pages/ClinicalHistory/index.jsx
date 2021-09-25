@@ -168,7 +168,7 @@ export const ClinicalHistory = () => {
   const addSpecialist = () => setSpecialistsListSelected([
     ...genericListSelected(specialistsListSelected, {
       ...specialistSelected,
-      lendingPresentationSelected: lendingSpecialistSelected,
+      lendingPresentationSelected: { ...lendingSpecialistSelected },
       observation: specialistsObservation
     })
   ])
@@ -176,7 +176,7 @@ export const ClinicalHistory = () => {
   const addDiagnosticAid = () => setDiagnosticAidsListSelected([
     ...genericListSelected(diagnosticAidsListSelected, {
       ...diagnosticAidSelected,
-      lendingPresentationSelected: lendingDiagnosticAidSelected.text || '',
+      lendingPresentationSelected: { ...lendingDiagnosticAidSelected },
       observation: diagnosticAidObservation,
       quantity: diagnosticAidQuantity
     })
@@ -185,7 +185,7 @@ export const ClinicalHistory = () => {
   const addExam = () => setExamsListSelected([
     ...genericListSelected(examsListSelected, {
       ...examSelected,
-      lendingPresentationSelected: lendingExamSelected,
+      lendingPresentationSelected: { ...lendingExamSelected },
       observation: examObservation,
       quantity: examQuantity
     })
@@ -194,7 +194,7 @@ export const ClinicalHistory = () => {
   const addMedicine = () => setMedicinesListSelected([
     ...genericListSelected(medicinesListSelected, {
       ...medicineSelected,
-      lendingPresentationSelected: presentationSelected.text || '',
+      lendingPresentationSelected: { ...presentationSelected },
       observation: medicineObservation,
       quantity: medicineQuantity
     })
@@ -396,6 +396,8 @@ export const ClinicalHistory = () => {
           response.data.map((item) => ({
             key: item.id,
             text: item.name,
+            address: item.address,
+            cellphone: item.cellphone,
           })),
         )
       } else if (response?.status === 401) {

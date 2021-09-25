@@ -19,10 +19,10 @@ import { ReactComponent as CloseIcon } from '../../../assets/images/close.svg'
 import { ReactComponent as InfoIcon } from '../../../assets/images/info.svg'
 
 // PDF
-import { PDFDownloadLink, Page, Text, View, Document, StyleSheet } from '@react-pdf/renderer';
+import { PDFDownloadLink, Page, Text, View, Document, Image } from '@react-pdf/renderer';
 
 // styles & assets
-import { useStyles } from './style'
+import { useStyles, styles } from './style'
 
 export const FormRemission = (
     {
@@ -70,38 +70,85 @@ export const FormRemission = (
     const handleClose = () => handleOpenCloseModal(false)
     const handleOpen = () => handleOpenCloseModal(true)
 
-    // Create styles
-    const styles = StyleSheet.create({
-        page: {
-            flexDirection: 'row',
-            backgroundColor: '#E4E4E4'
-        },
-        section: {
-            margin: 10,
-            padding: 10,
-            flexGrow: 1
-        }
-    });
+    const lendings = {};
+
+    for (let i = 0; i <= listDataSelected.length; i++) {
+        if (listDataSelected[i] && title !== 'MEDICAMENTOS' && listDataSelected[i].lendingPresentationSelected)
+            lendings[listDataSelected[i].lendingPresentationSelected.key]
+                ? Array.isArray(lendings[listDataSelected[i].lendingPresentationSelected.key])
+                    ? lendings[listDataSelected[i].lendingPresentationSelected.key].push({ ...listDataSelected[i] })
+                    : lendings[listDataSelected[i].lendingPresentationSelected.key] = [{ ...listDataSelected[i] }]
+                : lendings[listDataSelected[i].lendingPresentationSelected.key] = [{ ...listDataSelected[i] }]
+    }
+
+    const lendingsArray = Object.entries(lendings)
 
     // Create Document Component
-    const MyDocument = () => (
+    const GeneralData = () => (
+        <>
+            <Image src={logo} style={styles.image} />
+            <View style={styles.section}>
+                <Text style={styles.title}>REMISIÓN {title}</Text>
+            </View>
+            <View style={styles.section} wrap={false}>
+
+                <Text style={styles.subtittle}>DATOS DEL PACIENTE</Text>
+
+                <View style={styles.container}>
+                    <View style={styles.subcontainer}>
+                        <Text style={styles.textBold}>No. Documento:</Text>
+                        <Text style={styles.textInfo}>{profilerObj.nuip}</Text>
+                    </View>
+                    <View style={styles.subcontainer}>
+                        <Text style={styles.textBold}>Teléfono:</Text>
+                        <Text style={styles.textInfo}>{profilerObj.phoneNumber}</Text>
+                    </View>
+                </View>
+                <View style={styles.container}>
+                    <View style={styles.subcontainer}>
+                        <Text style={styles.textBold}>Nombre:</Text>
+                        <Text style={styles.textInfo}>{`${userObj.firstName} ${userObj.surname}`}</Text>
+                    </View>
+                    <View style={styles.subcontainer}>
+                        <Text style={styles.textBold}>Dirección:</Text>
+                        <Text style={styles.textInfo}>{profilerObj.address}</Text>
+                    </View>
+                </View>
+            </View>
+            <View style={styles.section} wrap={false}>
+                <Text style={styles.subtittle}>DETALLE DE LA REMISIÓN</Text>
+            </View>
+        </>
+    )
+
+    const PdfDocument = () => (
         <Document>
-            <Page size="A4" style={styles.page}>
-                <View style={styles.section}>
-                    <Text>Section #1</Text>
-                </View>
-                <View style={styles.section}>
-                    <Text>Section #2</Text>
-                </View>
-            </Page>
-            <Page size="A4" style={styles.page}>
-                <View style={styles.section}>
-                    <Text>Section #1</Text>
-                </View>
-                <View style={styles.section}>
-                    <Text>Section #2</Text>
-                </View>
-            </Page>
+            {
+                title !== 'MEDICAMENTOS' ? lendingsArray.map((el, index) => (
+                    <Page size="A4" style={styles.page} key={`pdf-generator-${index}`}>
+                        <GeneralData />
+                        <View style={styles.section} wrap={false}>
+                            <Text style={styles.subtittle}>PRESTADOR</Text>
+                            <View style={styles.container}>
+                                <View style={styles.subcontainer}>
+                                    <Text style={styles.textBold}>Nombre:</Text>
+                                    <Text style={styles.textInfo}>{el[1][0].lendingPresentationSelected.text}</Text>
+                                </View>
+                                <View style={styles.subcontainer}>
+                                    <Text style={styles.textBold}>Dirección:</Text>
+                                    <Text style={styles.textInfo}>{el[1][0].lendingPresentationSelected.address}</Text>
+                                </View>
+                            </View>
+                            <View style={styles.container}>
+                                <View style={styles.subcontainer}>
+                                    <Text style={styles.textBold}>Teléfono:</Text>
+                                    <Text style={styles.textInfo}>{`${el[1][0].lendingPresentationSelected.cellphone}`}</Text>
+                                </View>
+                            </View>
+                        </View>
+                    </Page>
+                )) : <Page size="A4" style={styles.page}><GeneralData /></Page>
+            }
         </Document>
     );
 
@@ -109,7 +156,7 @@ export const FormRemission = (
         var fileURL = URL.createObjectURL(blobObject);
         var win = window.open();
         win.document.write('<iframe src="' + fileURL + '" frameborder="0" style="border:0; top:0px; left:0px; bottom:0px; right:0px; width:100%; height:100%;" allowfullscreen></iframe>')
-        win.window.print()
+        // win.window.print()
     }
 
     const table = ({ showAction, showLending }) => (
@@ -349,7 +396,7 @@ export const FormRemission = (
                                     >
                                         {
                                             blobObject === null ? (
-                                                <PDFDownloadLink document={<MyDocument />} fileName={`${userObj.firstName}-${userObj.surname}.pdf`} onClick={handlePrint}>
+                                                <PDFDownloadLink document={<PdfDocument />} fileName={`${userObj.firstName}-${userObj.surname}.pdf`} onClick={handlePrint}>
                                                     {({ blob, url, loading, error }) => {
                                                         if (blob != null && blobObject === null) {
                                                             setBlobObject(blob)
@@ -457,16 +504,19 @@ export const FormRemission = (
                                     >
                                         <span><b>Teléfono:</b> xxxxxxxx</span>
                                     </Grid>
-                                    <Grid
-                                        item
-                                        xs={12}
-                                        sm={12}
-                                        md={12}
-                                        lg={12}
-                                        className={classes.containers}
-                                    >
-                                        <span><i><b>Nota:</b> Se imprimirá un formato media carta por cada prestador diferente en la tabla</i></span>
-                                    </Grid>
+
+                                    {title !== 'MEDICAMENTOS' && (
+                                        <Grid
+                                            item
+                                            xs={12}
+                                            sm={12}
+                                            md={12}
+                                            lg={12}
+                                            className={classes.containers}
+                                        >
+                                            <span><i><b>Nota:</b> Se imprimirá un formato media carta por cada prestador diferente en la tabla</i></span>
+                                        </Grid>
+                                    )}
                                 </Grid>
                             </div>
                         </Grid>
