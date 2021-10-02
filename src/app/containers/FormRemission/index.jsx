@@ -6,6 +6,13 @@ import { AutocompleteField } from '../../components/AutocompleteField'
 import { ItemDataSelected } from '../../components/ItemDataSelected'
 import { PopupMessage } from '../../components/PopupMessage'
 
+import Table from '@material-ui/core/Table';
+import TableBody from '@material-ui/core/TableBody';
+import TableCell from '@material-ui/core/TableCell';
+import TableContainer from '@material-ui/core/TableContainer';
+import TableHead from '@material-ui/core/TableHead';
+import TableRow from '@material-ui/core/TableRow';
+
 import {
     Button,
     Grid,
@@ -118,6 +125,40 @@ export const FormRemission = (
             <View style={styles.section} wrap={false}>
                 <Text style={styles.subtittle}>DETALLE DE LA REMISIÓN</Text>
             </View>
+            <View style={styles.section} wrap={false}>
+                <View style={styles.table_header}>
+                    {
+                        headers.map((el, index) =>
+                        (
+                            <View style={styles.table_rowItem}>
+                                <Text key={`pdf-table-${index}`} style={styles.textInfoTitle}>{el}</Text>
+                            </View>
+                        ))
+                    }
+                </View>
+                {
+                    listDataSelected.map((el, index) => (
+                        <View style={styles.table_header} key={`pdf-table-body-${index}`}>
+                            <View style={styles.table_rowItem}>
+                                <Text style={styles.textInfo}>{el.text}</Text>
+                            </View>
+                            {
+                                includeQuantity && (
+                                    <View style={styles.table_rowItem}>
+                                        <Text style={styles.textInfo}>{el.quantity}</Text>
+                                    </View>
+                                )
+                            }
+                            <View style={styles.table_rowItem}>
+                                <Text align="center" style={styles.textInfo}>{el.lendingPresentationSelected?.text || el.lendingPresentationSelected}</Text>
+                            </View>
+                            <View style={styles.table_rowItem}>
+                                <Text align="center" style={styles.textInfo}>{el.observation}</Text>
+                            </View>
+                        </View>
+                    ))
+                }
+            </View>
         </>
     )
 
@@ -160,39 +201,41 @@ export const FormRemission = (
     }
 
     const table = ({ showAction, showLending }) => (
-        <table border="1" className={classes.table}>
-            <thead>
-                <tr>
+        <TableContainer className={classes.table_container}>
+            <Table className={classes.table} aria-label="customized table">
+                <TableHead className={classes.tHeaderRow}>
+                    <TableRow>
+                        {
+                            headers.map((el, index) => !showLending && (el === 'Prestador' || el === 'Presentación') ? (<></>) :
+                                (
+                                    <TableCell align="center" key={`table-${index}`}>{el}</TableCell>
+                                ))
+                        }
+                        {
+                            showAction ? (<TableCell align="center">Acción</TableCell>) : (<></>)
+                        }
+                    </TableRow>
+                </TableHead>
+                <TableBody>
                     {
-                        headers.map((el, index) => !showLending && (el === 'Prestador' || el === 'Presentación') ? (<></>) :
-                            (
-                                <th className={classes.tHeaderRow} key={`table-${index}`}>{el}</th>
-                            ))
+                        listDataSelected.map(el => (
+                            <ItemDataSelected
+                                showAction={showAction}
+                                showLending={showLending}
+                                includeQuantity={includeQuantity}
+                                key={`${listKey}-${el.key}`}
+                                item={{
+                                    ...el,
+                                    text: `${el.text}`
+                                }}
+                                disabled={!canEdit}
+                                onDelete={(item) => removeFromList(item)}
+                            />
+                        ))
                     }
-                    {
-                        showAction ? (<th className={classes.tHeaderRow}>Acción</th>) : (<></>)
-                    }
-                </tr>
-            </thead>
-            <tbody>
-                {
-                    listDataSelected.map(el => (
-                        <ItemDataSelected
-                            showAction={showAction}
-                            showLending={showLending}
-                            includeQuantity={includeQuantity}
-                            key={`${listKey}-${el.key}`}
-                            item={{
-                                ...el,
-                                text: `${el.text}`
-                            }}
-                            disabled={!canEdit}
-                            onDelete={(item) => removeFromList(item)}
-                        />
-                    ))
-                }
-            </tbody>
-        </table>
+                </TableBody>
+            </Table>
+        </TableContainer>
     )
 
     return (

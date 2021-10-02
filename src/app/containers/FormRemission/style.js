@@ -71,17 +71,15 @@ export const useStyles = makeStyles((theme) => ({
         alignItems: 'flex-end',
         justifyContent: 'flex-end'
     },
-    table: {
-        marginTop: '2px',
-        marginBottom: '10px',
-        textAlign: 'center'
-    },
     tHeaderRow: {
-        padding: '5px',
-        border: 'black solid 2px'
+        backgroundColor: Color.gray
     },
     print: {
         textAlign: 'end'
+    },
+    table_container: {
+        width: '100%',
+        marginBottom: theme.spacing(2),
     },
     paper: {
         backgroundColor: Color.light,
@@ -135,11 +133,10 @@ export const useStyles = makeStyles((theme) => ({
         width: '100%',
         padding: '20px'
     },
-}))
+}));
 
 export const styles = StyleSheet.create({
     page: {
-        // display: 'flex',
         flexDirection: 'column',
         backgroundColor: Color.white
     },
@@ -152,7 +149,6 @@ export const styles = StyleSheet.create({
         marginLeft: 10,
         marginRight: 10,
         padding: 5,
-        // flexGrow: 1,
     },
     title: {
         textAlign: 'center',
@@ -184,9 +180,26 @@ export const styles = StyleSheet.create({
     textInfo: {
         fontSize: 12
     },
+    textInfoTitle: {
+        fontSize: 14
+    },
     textBold: {
         fontWeight: 'ultrabold',
         fontSize: 12,
         marginRight: 2
-    }
+    },
+    table_header: {
+        width: '100%',
+        display: 'flex',
+        flexDirection: 'row',
+        marginTop: 3,
+        marginBottom: 3,
+        padding: 3
+    },
+    table_rowItem: {
+        width: '40%',
+        display: 'flex',
+        flexDirection: 'row',
+        padding: 2
+    },
 });
