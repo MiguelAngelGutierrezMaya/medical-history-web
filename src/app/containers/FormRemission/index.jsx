@@ -91,7 +91,32 @@ export const FormRemission = (
     const lendingsArray = Object.entries(lendings)
 
     // Create Document Component
-    const GeneralData = () => (
+    const TableData = ({ el }) => (
+        <View style={styles.table_header}>
+            <View style={styles.table_rowItem}>
+                <Text style={styles.textInfo}>{el.text}</Text>
+            </View>
+            {
+                includeQuantity && (
+                    <View style={styles.table_rowItem}>
+                        <Text style={styles.textInfo}>{el.quantity}</Text>
+                    </View>
+                )
+            }
+            {
+                title === 'MEDICAMENTOS' && (
+                    <View style={styles.table_rowItem}>
+                        <Text align="center" style={styles.textInfo}>{el.lendingPresentationSelected?.text || el.lendingPresentationSelected}</Text>
+                    </View>
+                )
+            }
+            <View style={styles.table_rowItem}>
+                <Text align="center" style={styles.textInfo}>{el.observation}</Text>
+            </View>
+        </View>
+    )
+
+    const GeneralData = ({ lending }) => (
         <>
             <Image src={logo} style={styles.image} />
             <View style={styles.section}>
@@ -129,34 +154,19 @@ export const FormRemission = (
                 <View style={styles.table_header}>
                     {
                         headers.map((el, index) =>
-                        (
-                            <View style={styles.table_rowItem}>
-                                <Text key={`pdf-table-${index}`} style={styles.textInfoTitle}>{el}</Text>
-                            </View>
-                        ))
+                            el !== 'Prestador' && (
+                                <View style={styles.table_rowItem}>
+                                    <Text key={`pdf-table-${index}`} style={styles.textInfoTitle}>{el}</Text>
+                                </View>
+                            ))
                     }
                 </View>
                 {
-                    listDataSelected.map((el, index) => (
-                        <View style={styles.table_header} key={`pdf-table-body-${index}`}>
-                            <View style={styles.table_rowItem}>
-                                <Text style={styles.textInfo}>{el.text}</Text>
-                            </View>
-                            {
-                                includeQuantity && (
-                                    <View style={styles.table_rowItem}>
-                                        <Text style={styles.textInfo}>{el.quantity}</Text>
-                                    </View>
-                                )
-                            }
-                            <View style={styles.table_rowItem}>
-                                <Text align="center" style={styles.textInfo}>{el.lendingPresentationSelected?.text || el.lendingPresentationSelected}</Text>
-                            </View>
-                            <View style={styles.table_rowItem}>
-                                <Text align="center" style={styles.textInfo}>{el.observation}</Text>
-                            </View>
-                        </View>
-                    ))
+                    lending !== null
+                        ? lending[1].map((el, index) => (<TableData el={el} key={`pdf-table-body-${index}`} />))
+                        : listDataSelected.map((el, index) => (
+                            <TableData el={el} key={`pdf-table-body-${index}`} />
+                        ))
                 }
             </View>
         </>
@@ -167,7 +177,7 @@ export const FormRemission = (
             {
                 title !== 'MEDICAMENTOS' ? lendingsArray.map((el, index) => (
                     <Page size="A4" style={styles.page} key={`pdf-generator-${index}`}>
-                        <GeneralData />
+                        <GeneralData lending={el} />
                         <View style={styles.section} wrap={false}>
                             <Text style={styles.subtittle}>PRESTADOR</Text>
                             <View style={styles.container}>
