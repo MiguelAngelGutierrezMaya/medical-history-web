@@ -186,6 +186,7 @@ export const ScheduleForm = () => {
         }
       }
     })
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const handleChange = (event, day, position) => {
